@@ -114,8 +114,16 @@ export default [
 	  name: 'finance',
 	  label: '财务',
 	  fileUrl: '/layout/finance',
-	  url: '/layout/finance',
-	  component: 'FinanceIndex.vue'
+	  url: '/layout/finance/audit',
+	  component: 'FinanceIndex.vue',
+	  children: [
+		  {
+		    name: 'audit',
+			  label: '审核',
+			  url: '/layout/finance/audit',
+			  component: 'Audit.vue', 
+			}
+	  ]
 	},
 	{
 	  name: 'system',

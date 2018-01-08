@@ -100,6 +100,11 @@
       '$route'(to, from){
         let pathList = to.path.split('/');
         this.mainName = pathList[2];
+        this.routerConfig.forEach((ele, index) => {
+          if(ele.name == this.mainName){
+            this.mainIndex = index
+          }
+        });
         this.secondaryName = pathList[3];
         this.$nextTick(function(){
           this.$refs.secondaryselect.updateActiveName();
