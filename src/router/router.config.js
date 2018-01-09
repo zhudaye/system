@@ -158,8 +158,59 @@ export default [
 	  name: 'finance',
 	  label: '财务',
 	  fileUrl: '/layout/finance',
-	  url: '/layout/finance/audit',
-	  component: 'FinanceIndex.vue'
+	  url: '/layout/finance/general',
+	  component: 'FinanceIndex.vue',
+	  children: [
+			{
+		    name: 'general',
+			  label: '概况',
+			  url: '/layout/finance/general',
+			  component: 'General.vue', 
+			},
+			{
+		    name: 'clientmoney',
+			  label: '客户资金',
+			  url: '/layout/finance/clientmoney',
+			  component: 'Clientmoney.vue', 
+			},
+		  {
+		    name: 'audit',
+			  label: '客户账单',
+			  url: '/layout/finance/audit',
+			  component: 'Audit.vue', 
+			},
+				{
+		    name: 'clientintegral',
+			  label: '客户积分账单',
+			  url: '/layout/finance/clientintegral',
+			  component: 'Clientintegral.vue', 
+			},
+			{
+		    name: 'withdrawal',
+			  label: '提现请求',
+			  url: '/layout/finance/withdrawal',
+			  component: 'withdrawal.vue', 
+			},
+			{
+		    name: 'collectmoney',
+			  label: '收款单',
+			  url: '/layout/finance/collectmoney',
+			  component: 'Collectmoney.vue', 
+			},
+			{
+		    name: 'backmoney',
+			  label: '退款单',
+			  url: '/layout/finance/backmoney',
+			  component: 'Backmoney.vue', 
+			},
+			{
+		    name: 'billmanagement',
+			  label: '发票管理',
+			  url: '/layout/finance/billmanagement',
+			  component: 'Billmanagement.vue', 
+			},
+			
+	  ]
 	},
 	{
 	  name: 'system',
