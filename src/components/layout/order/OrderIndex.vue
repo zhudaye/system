@@ -1,6 +1,6 @@
 <template>
 	<div class="OrderIndex">
-		<div>{{name}}</div>
+    <router-view/>
 	</div>
 </template>
 <script>

@@ -1,17 +1,17 @@
 <template>
 <div class="layout">
   <Row type="flex">
-    <i-col span="4" class="layout-menu-left">
+    <div style="position:fixed;left:0; top:0;width:200px; min-height: 100%; background-color: #495060;z-index:1000;">
       <Menu :active-name="secondaryName" theme="dark" width="auto" ref="secondaryselect">
         <div class="layout-logo-left"></div>        
-        <Menu-item v-if="mainIndex && routerConfig && routerConfig[mainIndex] && routerConfig[mainIndex].children"  v-for="(item, index) in routerConfig[mainIndex].children" :name="item.name" class="secondary-link"><router-link :to="item.url">{{item.label}}</router-link></Menu-item>
+        <Menu-item v-if="mainIndex && routerConfig && routerConfig[mainIndex] && routerConfig[mainIndex].children"  v-for="(item, index) in routerConfig[mainIndex].children" :name="item.name" class="secondary-link" :key="item.name"><router-link :to="item.url">{{item.label}}</router-link></Menu-item>
       </Menu>
-    </i-col>
-    <i-col span="20">
-      <div class="layout-header">
+    </div>
+    <div style="box-sizing: border-box;width:100%;height:100%; padding-left: 200px;">
+      <div class="layout-header" style="position: fixed;width: 100%; z-index:999;top: 0;left:0;padding-left: 200px;">
         <div class="layout-ceiling">
           <div class="layout-ceiling-main nav-top">
-            <Button v-for="(item, index) in routerConfig" :type="mainName == item.name ? 'success': 'primary'" @click="changeIndex(item, index)">{{item.label}}</Button>
+            <Button v-for="(item, index) in routerConfig" :type="mainName == item.name ? 'success': 'primary'" @click="changeIndex(item, index)" :key="item.name">{{item.label}}</Button>
           </div>
           <div class="layout-ceiling-main">
             <a href="#">注册登录</a> |
@@ -21,9 +21,10 @@
           </div>
         </div>
       </div>
-      <div class="layout-content">
+      <div class="layout-content" style='margin-top: 75px'>
         <div class="layout-content-main">
           <router-view/>
+<<<<<<< HEAD
           <p>大大苏打</p>
            <p>大大苏打</p>
             <p>大大苏打</p>
@@ -60,11 +61,13 @@
              <p>大大苏打</p>
               <p>大大苏打</p>
                <p>大大苏打</p>
+=======
+>>>>>>> c75dd64b487154ac2dfdbe0c7e53f9829baf4fba
         </div>
       </div>
       <div class="layout-copy">
       </div>
-    </i-col>
+    </div>
   </Row>
 </div>
 </template>
