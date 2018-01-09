@@ -158,7 +158,6 @@ export default [
 	  name: 'finance',
 	  label: '财务',
 	  fileUrl: '/layout/finance',
-<<<<<<< HEAD
 	  url: '/layout/finance/general',
 	  component: 'FinanceIndex.vue',
 	  children: [
@@ -212,10 +211,6 @@ export default [
 			},
 			
 	  ]
-=======
-	  url: '/layout/finance/audit',
-	  component: 'FinanceIndex.vue'
->>>>>>> c75dd64b487154ac2dfdbe0c7e53f9829baf4fba
 	},
 	{
 	  name: 'system',
