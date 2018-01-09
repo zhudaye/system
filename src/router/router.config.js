@@ -79,8 +79,52 @@ export default [
 	  name: 'order',
 	  label: '订单',
 	  fileUrl: '/layout/order',
-	  url: '/layout/order',
-	  component: 'OrderIndex.vue'
+	  url: '/layout/order/generalsituationorder',
+	  component: 'OrderIndex.vue',
+	  children: [
+      {
+	      name: 'generalsituationorder',
+	      label: '概况',
+	      url: '/layout/order/generalsituationorder',
+	      component: 'GeneralsituationOrder.vue'
+      },
+      {
+	      name: 'waitshiporder',
+	      label: '待发货订单',
+	      url: '/layout/order/waitshiporder',
+	      component: 'WaitShipOrder.vue'
+      },
+      {
+	      name: 'waitreceiveorder',
+	      label: '待收货订单',
+	      url: '/layout/order/waitreceiveorder',
+	      component: 'WaitReceiveOrder.vue'
+      },
+      {
+	      name: 'determineorder',
+	      label: '已确认订单',
+	      url: '/layout/order/determineorder',
+	      component: 'DetermineOrder.vue'
+      },
+      {
+	      name: 'unpaidorder',
+	      label: '未支付订单',
+	      url: '/layout/order/unpaidorder',
+	      component: 'UnPaidOrder.vue'
+      },
+      {
+	      name: 'allorder',
+	      label: '全部订单',
+	      url: '/layout/order/allorder',
+	      component: 'AllOrder.vue'
+      },
+      {
+	      name: 'returnprocess',
+	      label: '退货处理',
+	      url: '/layout/order/returnprocess',
+	      component: 'ReturnProcess.vue'
+      }
+	  ]
 	},
 	{
 	  name: 'content',
@@ -115,15 +159,7 @@ export default [
 	  label: '财务',
 	  fileUrl: '/layout/finance',
 	  url: '/layout/finance/audit',
-	  component: 'FinanceIndex.vue',
-	  children: [
-		  {
-		    name: 'audit',
-			  label: '审核',
-			  url: '/layout/finance/audit',
-			  component: 'Audit.vue', 
-			}
-	  ]
+	  component: 'FinanceIndex.vue'
 	},
 	{
 	  name: 'system',
