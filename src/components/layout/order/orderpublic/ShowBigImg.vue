@@ -5,6 +5,9 @@
 			<img :src="imginfo.smallImg" class="smallimg">
 			<img class="xuxian" src="static/images/ceshi/xuxian.png">
 		</div>
+		<div class="imgbox" v-if="imginfo && imginfo.type == 'shoes'">
+			<img :src="imginfo.screenin">
+		</div>
 	</div>
 </template>
 <script>
@@ -23,6 +26,9 @@
 	left: 0;
 	top: 50%;
 	z-index: 9999;
+	border-radius: 5px;
+	border: 1px solid #ddd;
+	overflow: hidden;
 	-webkit-transform: translate(0, -50%);
 	-moz-transform: translate(0, -50%);
 	-ms-transform: translate(0, -50%);

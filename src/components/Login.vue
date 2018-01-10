@@ -259,16 +259,38 @@ function render() {
         var container = document.createElement( 'div' );
         this.$refs.can.appendChild( container );  
         var  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-        camera.position.z = 1000;
+        camera.position.z = 2000;
 
         var scene = new THREE.Scene();
 
         var particles = new Array();
 
         var PI2 = Math.PI * 2;
-        var material = new THREE.ParticleCanvasMaterial( {
 
-            color: 0x0078de,
+        var i = 0;
+
+        for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
+
+          for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
+
+            particle = particles[ i ++ ] = new THREE.Particle( new THREE.ParticleCanvasMaterial( {
+
+            color: (() => {
+              var rand = Math.random();
+              if(rand < 0.2){
+                return 0xff0000;
+              }
+              if(rand >=0.2 && rand < 0.4){
+                return 0x00ff00;
+              }
+              if(rand >=0.4 && rand < 0.8){
+                return 0x0000ff;
+              }
+
+              if(rand >=0.8){
+                return 0xff00ff;
+              }
+            })(),
             program: function ( context ) {
 
             context.beginPath();
@@ -277,15 +299,7 @@ function render() {
 
           }
 
-        } );
-
-        var i = 0;
-
-        for ( var ix = 0; ix < AMOUNTX; ix ++ ) {
-
-          for ( var iy = 0; iy < AMOUNTY; iy ++ ) {
-
-            particle = particles[ i ++ ] = new THREE.Particle( material );
+        } ) );
             particle.position.x = ix * SEPARATION - ( ( AMOUNTX * SEPARATION ) / 2 );
             particle.position.z = iy * SEPARATION - ( ( AMOUNTY * SEPARATION ) / 2 );
             scene.add( particle );
@@ -331,6 +345,7 @@ function render() {
     top: 0;
     bottom: 0;
     margin: auto;
+    margin-top: 120px;
     width: 400px;
     height:300px;
     padding: 35px 35px 15px 35px;

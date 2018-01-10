@@ -55,7 +55,7 @@
 					      	  <p class="title">正面缩略图</p>
 					      	  <div class="img-box">
 					      	  	<img src="static/images/ceshi/aa.jpg" class="hidden">
-					      	  	<div class="img-box-inner" v-if="oneOrder.frontSmallImg" @mouseenter="imgMouseEnter({type: item.type,smallImg: oneOrder.frontSmallImg, bigImg: oneOrder.frontClothImg}, $event)" @mouseleave="imgMouseLeave({type: item.type,smallImg: oneOrder.frontSmallImg, bigImg: oneOrder.frontClothImg}, $event)" @mousemove="imgMouseMove($event)">
+					      	  	<div class="img-box-inner" v-if="oneOrder.frontSmallImg" @mouseenter="imgMouseEnter({type: item.type,smallImg: oneOrder.frontSmallImg, bigImg: oneOrder.frontClothImg}, $event)" @mouseleave="imgMouseLeave" @mousemove="imgMouseMove($event)">
 						      	  	<img :src="oneOrder.frontClothImg">
 						      	  	<img :src="oneOrder.frontSmallImg" class="small-img">
 						      	  </div>
@@ -68,7 +68,7 @@
 					          <p class="title">背面缩略图</p>
 					          <div class="img-box">
 					          	<img src="static/images/ceshi/aa.jpg" class="hidden">
-					      	    <div class="img-box-inner" v-if="oneOrder.backClothImg" @mouseenter="imgMouseEnter({type: item.type,smallImg: oneOrder.backSmallImg, bigImg: oneOrder.backClothImg}, $event)" @mouseleave="imgMouseLeave({type: item.type,smallImg: oneOrder.backSmallImg, bigImg: oneOrder.backClothImg}, $event)" @mousemove="imgMouseMove($event)">
+					      	    <div class="img-box-inner" v-if="oneOrder.backClothImg" @mouseenter="imgMouseEnter({type: item.type,smallImg: oneOrder.backSmallImg, bigImg: oneOrder.backClothImg}, $event)" @mouseleave="imgMouseLeave" @mousemove="imgMouseMove($event)">
 						      	  	<img :src="oneOrder.backClothImg">
 						      	  	<img :src="oneOrder.backSmallImg" class="small-img">
 						      	  </div>
@@ -109,62 +109,82 @@
 					    </div>
 					    <div class="one-goods" v-if="item.type == 'shoes'">
 					      <Checkbox v-model="oneOrder.isIn" class="check-box"></Checkbox>
-					      <Row class="one-goods-content" type="flex" align="middle">
-					      	<Col span="5" class="one-goods-content-img">
-					      	  <p class="title">正面缩略图</p>
-					      	  <div class="img-box">
-					      	  	<img src="static/images/ceshi/shoe_in.jpg" class="hidden">
-					      	  	<div class="img-box-inner" v-if="oneOrder.frontSmallImg" @mouseenter="imgMouseEnter({type: item.type,smallImg: oneOrder.frontSmallImg, bigImg: oneOrder.frontClothImg}, $event)" @mouseleave="imgMouseLeave({type: item.type,smallImg: oneOrder.frontSmallImg, bigImg: oneOrder.frontClothImg}, $event)" @mousemove="imgMouseMove($event)">
-						      	  	<img :src="oneOrder.frontClothImg">
-						      	  	<img :src="oneOrder.frontSmallImg" class="small-img">
-						      	  </div>
-					      	  	<span v-else>无</span>
-					      	  </div>
-					      	  <p class="download" v-if="oneOrder.frontSmallImg"><a href="" download>下载</a></p>
-					      	  <p class="hidden" v-else>无</p>
-					        </Col>
-					        <Col span="5" class="one-goods-content-img">
-					          <p class="title">背面缩略图</p>
-					          <div class="img-box">
-					          	<img src="static/images/ceshi/aa.jpg" class="hidden">
-					      	    <div class="img-box-inner" v-if="oneOrder.backClothImg" @mouseenter="imgMouseEnter({type: item.type,smallImg: oneOrder.backSmallImg, bigImg: oneOrder.backClothImg}, $event)" @mouseleave="imgMouseLeave({type: item.type,smallImg: oneOrder.backSmallImg, bigImg: oneOrder.backClothImg}, $event)" @mousemove="imgMouseMove($event)">
-						      	  	<img :src="oneOrder.backClothImg">
-						      	  	<img :src="oneOrder.backSmallImg" class="small-img">
-						      	  </div>
-					      	  	<span v-else>无</span>
-					      	  </div>
-					      	  <p class="download" v-if="oneOrder.backSmallImg"><a href="" download>下载</a></p>
-					      	  <p class="hidden" v-else>无</p>
-					        </Col>
-					        <Col span="14">
-					          <Row class="textCenter" >
-					          	<Col span="4">
-					          	  <p>款式</p>
-					          	  <p>{{oneOrder.styleTitle}}</p>
-					            </Col>
-					            <Col span="5">
-					          	  <p>类型</p>
-					          	  <p>{{oneOrder.materialTitle}}</p>
-					            </Col>
-                      <Col span="3">
-                        <p>性别</p>
-                        <p>{{oneOrder.sexTitle}}</p>
-                      </Col>
-                      <Col span="4">
-					          	  <p>颜色</p>
-					          	  <p>{{oneOrder.colorTitle}}</p>
-					            </Col>
-					            <Col span="4">
-					          	  <p>尺码</p>
-					          	  <p>{{oneOrder.sizeTitle}}</p>
-					            </Col>
-					            <Col span="4">
-					          	  <p>数量</p>
-					          	  <p>x{{oneOrder.number}}</p>
-					            </Col>					         
-					          </Row>
-					        </Col>
-					      </Row>
+						    <Row class="one-goods-content">
+						    	<Col span="24">
+							      <Row>
+							      	<Col span="4" class="one-goods-content-img">
+							      	  <p class="title">内侧缩略图</p>
+							      	  <div class="img-box">
+							      	  	<img src="static/images/shoes/nei.png" class="hidden">
+							      	  	<div class="img-box-inner" @mouseenter="imgMouseEnter({type: item.type,screenin: oneOrder.screenin}, $event)" @mouseleave="imgMouseLeave" @mousemove="imgMouseMove($event)">
+								      	  	<img :src="oneOrder.screenin">
+								      	  </div>
+							      	  </div>
+							        </Col>
+							        <Col span="4" class="one-goods-content-img">
+							      	  <p class="title">外侧侧缩略图</p>
+							      	  <div class="img-box">
+							      	  	<img src="static/images/shoes/nei.png" class="hidden">
+							      	  	<div class="img-box-inner" @mouseenter="imgMouseEnter({type: item.type,screenin: oneOrder.screenout}, $event)" @mouseleave="imgMouseLeave" @mousemove="imgMouseMove($event)">
+								      	  	<img :src="oneOrder.screenout">
+								      	  </div>
+							      	  </div>
+							        </Col>
+							        <Col span="4" class="one-goods-content-img">
+							      	  <p class="title">鞋面缩略图</p>
+							      	  <div class="img-box">
+							      	  	<img src="static/images/shoes/nei.png" class="hidden">
+							      	  	<div class="img-box-inner" @mouseenter="imgMouseEnter({type: item.type,screenin: oneOrder.screenfront}, $event)" @mouseleave="imgMouseLeave" @mousemove="imgMouseMove($event)">
+								      	  	<img :src="oneOrder.screenfront">
+								      	  </div>
+							      	  </div>
+							        </Col>
+							        <Col span="4" class="one-goods-content-img">
+							      	  <p class="title">后跟缩略图</p>
+							      	  <div class="img-box">
+							      	  	<img src="static/images/shoes/nei.png" class="hidden">
+							      	  	<div class="img-box-inner" @mouseenter="imgMouseEnter({type: item.type,screenin: oneOrder.screenback}, $event)" @mouseleave="imgMouseLeave" @mousemove="imgMouseMove($event)">
+								      	  	<img :src="oneOrder.screenback">
+								      	  </div>
+							      	  </div>
+							        </Col>
+							      </Row>
+							      <Row style="margin-top: 10px;">
+							      	<Col span="6" class="one-goods-content-img">
+							      	  <Button type="primary">生成左脚鞋图片</Button>
+                        <Button type="primary" disabled>下载</Button>
+							        </Col>
+							        <Col span="6" class="one-goods-content-img">
+							      	  <Button type="primary">生成右脚鞋图片</Button>
+                        <Button type="primary" disabled>下载</Button>
+							        </Col>
+							        <Col span="12" class="one-goods-content-img">
+							          <Button type="primary" disabled>生成左脚与右脚鞋图片</Button>
+                        <Button type="primary">下载</Button>
+							        </Col>
+							      </Row>
+							    </Col>
+							    <Col span="8" class="shoe-info">
+							      <Row>
+							        <Col span="24">
+							          <Row class="textCenter" >
+							          	<Col span="8">
+							          	  <p>款式</p>
+							          	  <p>{{oneOrder.styleTitle}}</p>
+							            </Col>
+							            <Col span="8">
+							          	  <p>尺码</p>
+							          	  <p>{{oneOrder.sizeTitle}}</p>
+							            </Col>
+		                      <Col span="8">
+		                        <p>数量</p>
+		                        <p>x{{oneOrder.number}}</p>
+		                      </Col>    
+							          </Row>
+							        </Col>
+						        </Row>
+						      </Col>
+						    </Row>
 					    </div>
 				    </Col>
 			    </Row>
@@ -298,7 +318,7 @@ import ShowBigImg from '../orderpublic/ShowBigImg'
 	          	{
 	          		styleTitle:'草鞋',
 		          	sizeTitle: 44,
-		          	nummber: 1000,
+		          	number: 1000,
 		          	screenout: "static/images/shoes/wai.png",
 		          	screenin: "static/images/shoes/nei.png",
 		          	screenback: "static/images/shoes/hou.png",
@@ -311,7 +331,7 @@ import ShowBigImg from '../orderpublic/ShowBigImg'
 	          	{
 	          		styleTitle:'草鞋',
 		          	sizeTitle: 43,
-		          	nummber: 100,
+		          	number: 100,
 		          	screenout: "static/images/shoes/wai.png",
 		          	screenin: "static/images/shoes/nei.png",
 		          	screenback: "static/images/shoes/hou.png",
@@ -324,7 +344,7 @@ import ShowBigImg from '../orderpublic/ShowBigImg'
 	          	{
 	          		styleTitle:'草鞋',
 		          	sizeTitle: 40,
-		          	nummber: 800,
+		          	number: 800,
 		          	screenout: "static/images/shoes/wai.png",
 		          	screenin: "static/images/shoes/nei.png",
 		          	screenback: "static/images/shoes/hou.png",
@@ -352,7 +372,7 @@ import ShowBigImg from '../orderpublic/ShowBigImg'
 				this.ShowBigImgLeft = event.clientX;
         this.imginfo = obj;
 			},
-			imgMouseLeave(obj, event){
+			imgMouseLeave(){
         this.imginfo = null;
 			},
 			imgMouseMove(event){
@@ -549,6 +569,10 @@ import ShowBigImg from '../orderpublic/ShowBigImg'
   	transform: translate(0, -50%);
   }
 
+  .height100{
+    height: 100%;
+  }
+
   .padding15{
   	padding: 0 15px;
   }
@@ -557,6 +581,17 @@ import ShowBigImg from '../orderpublic/ShowBigImg'
   	text-align: center;
   	opacity: 0;
   	width: 100%;
+  }
+
+  .shoe-info{
+  	position: absolute;
+  	right: 0;
+  	top: 50%;
+  	-webkit-transform: translate(0, -50%);
+  	-moz-transform: translate(0, -50%);
+  	-ms-transform: translate(0, -50%);
+  	-o-transform: translate(0, -50%);
+  	transform: translate(0, -50%);
   }
 
   .textCenter{
