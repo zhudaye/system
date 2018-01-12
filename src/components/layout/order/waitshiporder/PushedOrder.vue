@@ -12,10 +12,10 @@
           <Col span="5">
             支付方式及金额
           </Col>
-          <Col span="4">
+          <Col span="3">
             物流
           </Col>
-          <Col span="7">
+          <Col span="8">
             状态
           </Col>
         </Row>
@@ -23,13 +23,13 @@
     </Row>
     <div class="one-order" v-if="orderList" v-for="(item, index) in orderList" :key="index">
     	<Row class="one-order-header">
-    		<Col span="17" class="order-header-info"> 
+    		<Col span="16" class="order-header-info"> 
 	        <span>用户完成支付时间：{{item.payTime | timeToSecond}}</span>
 	        <span> 订单号：{{item.orderID}}</span>
 	        <span>账户ID：{{item.userID}}</span>
           <span>账户名：{{item.userName}}</span>
 	      </Col>
-	      <Col span="7" class="one-order-header-right"> 
+	      <Col span="8" class="one-order-header-right" style="text-align: right"> 
 		      {{'订单推送时间：年-月-日-时-分-秒'}}
 		    </Col>
     	</Row>
@@ -38,7 +38,6 @@
 	        <Row> 
 	        	<Col span="24" v-if="item.goods" v-for="(oneGoods, indexGoods) in item.goods" class="left-height" :key="indexGoods">
 	        	  <div class="one-goods" v-if="item.type == 'clothes'">
-					      <Checkbox v-model="item.isIn" class="check-box" v-if="indexGoods == 0" @on-change="checkAllOrder"></Checkbox>
 					      <Row class="one-goods-content" type="flex" align="middle">
 					      	<Col span="5" class="one-goods-content-img">
 					      	  <p class="title">正面缩略图</p>
@@ -92,7 +91,6 @@
 					      </Row>
 					    </div>
 					    <div class="one-goods" v-if="item.type == 'shoes'">
-					      <Checkbox v-if="indexGoods == 0" v-model="item.isIn" class="check-box" @on-change="checkAllOrder"></Checkbox>
 						    <Row class="one-goods-content">
 						    	<Col span="24">
 							      <Row>
@@ -185,14 +183,15 @@
 		        	  <p>{{item.payMoney}}</p>
 		        	</div>
 	          </Col>
-	          <Col span="4" class="tbcenterbox textCenter ">
+	          <Col span="3" class="tbcenterbox textCenter ">
 	            <div class="tbcenter padding15">
 		        	  {{item.addressType}}
 		        	</div>
 	          </Col>
-	          <Col span="7" class="tbcenterbox textCenter">
-	            <div class="tbcenter">
-		        	  <Button type="warning" v-if="!item.pushed" @click="push(item)">立即推送</Button>
+	          <Col span="8" class="tbcenterbox textCenter">
+	            <div class="tbcenter padding15">
+		        	  <p>{{'XXXXXXXXXXXXX超牛逼工厂'}}</p>
+		        	  <p>等待工厂回传信息</p>
 		        	</div>
 	          </Col>
 	        </Row>
@@ -200,14 +199,8 @@
 	    </Row>
     </div>
     <Row  type="flex" align="middle" style="margin-top: 5px;padding: 10px">
-    	<Col span="2">
-    	  <Checkbox v-model="allOrder" @on-change="selectAll">全选</Checkbox>    	  
-      </Col>
-      <Col span="18">
+      <Col span="24">
         <Page :current="currentPage" :total="totalNumber" style="text-align: center" @on-change="loadData"></Page>
-      </Col>
-      <Col span="4" style="text-align: right">
-    	  <Button type="primary" @click="batchOperation">批量操作</Button> 	  
       </Col>
     </Row>
     <my-showbigimg :imginfo="imginfo" :left="ShowBigImgLeft"></my-showbigimg>
@@ -237,8 +230,7 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
           	orderID: 1220,
           	userID: 1222222,
           	userName: 'zhudaye',
-          	pushed: false,
-          	isIn: false,          	
+          	pushed: false,        	
           	name:'爷爷朱',
           	phoneNumber: 18811347069,
           	address: '重庆市扬子江商',
@@ -301,8 +293,7 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 
           	userID: 1222222,//用户ID
           	userName: 'zhudaye',//用户名
-          	pushed: false,//是否已推送
-          	isIn: false,//是否被选中          	
+          	pushed: false,//是否已推送     	
           	payType:'微信',//支付方式
           	payMoney: 21000,//支付金额
           	addressType: '顺丰',//快递方式
@@ -330,9 +321,7 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
           	payTime: new Date().getTime()/1000,
           	orderID: 1220,
           	userID: 1222222,
-          	userName: 'zhudaye',
-          	pushed: false,
-          	isIn: false,          	
+          	userName: 'zhudaye',	
           	name:'爷爷朱',
           	phoneNumber: 18811347069,
           	address: '重庆市扬子江商',
@@ -359,9 +348,7 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
           	payTime: new Date().getTime()/1000,
           	orderID: 1220,
           	userID: 1222222,
-          	userName: 'zhudaye',
-          	pushed: false,
-          	isIn: false,          	
+          	userName: 'zhudaye',      	
           	name:'爷爷朱',
           	phoneNumber: 18811347069,
           	address: '重庆市扬子江商',
@@ -463,83 +450,11 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 			'my-generatepicture': GeneratePicture
 		},
 		watch: {
-			orderList() { 
-			  this.checkAllOrder();                                                          	
-			}
 		},
 		methods: {
-			checkGenerateImg(list) {
-        for(let i = 0; i <list.length; i++) {
-          if(list[i].type == 'shoes') {
-            for (let j = 0; j < list[i].goods.length; j++) {
-            	if(!(list[i].goods[j].leftshoe && list[i].goods[j].rightshoe && list[i].goods[j].allshoe)) {
-            		return false;
-            	}
-            }
-          }
-        }
-        return true;
-			},
 			loadData(page) {
-				this.allOrder = false;
         console.log(page)
 			},
-			batchOperation() {
-				let selectList = this.orderList.filter((ele) => {
-					return ele.isIn
-				})
-
-				if(selectList.length <= 0) {
-					this.$Notice.error({
-            title: '错误提醒',
-            desc: '未选择订单',
-            duration: 2
-          });
-          return
-				}
-
-				if(!this.checkGenerateImg(selectList)){
-          this.$Notice.error({
-            title: '错误提醒',
-            desc: '订单有未生成图片',
-            duration: 2
-          });
-        	return;
-				}
-
-        this.showFactory(selectList);
-			},
-			push(item) {
-				if(!this.checkGenerateImg([item])){
-          this.$Notice.error({
-            title: '错误提醒',
-            desc: '订单有未生成图片',
-            duration: 2
-          });
-        	return;
-				}
-        this.showFactory([item]);
-			},
-			showFactory(upList) {
-				this.chooseFactory = true;
-				this.selectFactory = [];
-				this.upLoadOrder = JSON.parse(JSON.stringify(upList));
-			},
-			ok() {
-        if(this.selectFactory.length <= 0) {
-        	this.$Notice.error({
-            title: '错误提醒',
-            desc: '未选择推送工厂',
-            duration: 2
-          });
-        	return
-        }
-        console.log(this.upLoadOrder);
-        console.log(this.selectFactory);
-      },
-      cancel() {
-      	this.selectFactory = [];
-      },
 			saveImg(type, index, item) {
 				if(type == 'left') {
 					saveAs(item.goods[index].leftshoe, item.ordernumber + '左脚.jpeg');
@@ -550,25 +465,6 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 				if(type == 'all') {
 					saveAs(item.goods[index].allshoe, item.ordernumber + '左右脚.jpeg');
 				}
-			},
-			changePush(status) {
-				if(this.isPushed == status) return;
-				this.isPushed = status
-			},
-			selectAll() {
-        this.orderList = this.orderList.map((ele) => {
-					ele.isIn = this.allOrder;
-					return ele
-				})    
-			},
-			checkAllOrder() {
-        for(let i = 0; i < this.orderList.length; i++) {
-        	if(!this.orderList[i].isIn){
-        		this.allOrder = false
-        		return 
-        	}
-        }
-        this.allOrder = true
 			},
 			createImg(type, index, item){
         this.imgObj = {
@@ -769,8 +665,11 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
   }
 
   .one-order-body-right-all{
-  	line-height: 22px;
- 
+  	line-height: 20px;
+  }
+
+  .one-order-body-right-all p:not(:first-child){
+  	margin-top: 5px;
   }
 
   .left-height, .one-order-body-right-all>div{

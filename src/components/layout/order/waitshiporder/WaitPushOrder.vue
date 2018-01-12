@@ -22,13 +22,13 @@
         	<Col span="8">
         	  收货人
           </Col>
-          <Col span="6">
+          <Col span="5">
             支付方式及金额
           </Col>
-          <Col span="6">
+          <Col span="3">
             物流
           </Col>
-          <Col span="4">
+          <Col span="8">
             状态
           </Col>
         </Row>
@@ -36,13 +36,13 @@
     </Row>
     <div class="one-order" v-if="orderList" v-for="(item, index) in orderList" :key="index">
     	<Row class="one-order-header">
-    		<Col span="22" class="order-header-info"> 
+    		<Col span="20" class="order-header-info"> 
 	        <span>用户完成支付时间：{{item.payTime | timeToSecond}}</span>
 	        <span> 订单号：{{item.orderID}}</span>
 	        <span>账户ID：{{item.userID}}</span>
           <span>账户名：{{item.userName}}</span>
 	      </Col>
-	      <Col span="2" class="one-order-header-right"> 
+	      <Col span="4" class="one-order-header-right"> 
 		      {{'未推送'}}
 		    </Col>
     	</Row>
@@ -51,7 +51,7 @@
 	        <Row> 
 	        	<Col span="24" v-if="item.goods" v-for="(oneGoods, indexGoods) in item.goods" class="left-height" :key="indexGoods">
 	        	  <div class="one-goods" v-if="item.type == 'clothes'">
-					      <Checkbox v-model="item.isIn" class="check-box" v-if="indexGoods == 0" @on-change="checkAllOrder"></Checkbox>
+					      <Checkbox v-model="item.isIn" class="check-box" v-if="indexGoods == 0" @on-change="checkAllSelect"></Checkbox>
 					      <Row class="one-goods-content" type="flex" align="middle">
 					      	<Col span="5" class="one-goods-content-img">
 					      	  <p class="title">正面缩略图</p>
@@ -105,7 +105,7 @@
 					      </Row>
 					    </div>
 					    <div class="one-goods" v-if="item.type == 'shoes'">
-					      <Checkbox v-if="indexGoods == 0" v-model="item.isIn" class="check-box" @on-change="checkAllOrder"></Checkbox>
+					      <Checkbox v-if="indexGoods == 0" v-model="item.isIn" class="check-box" @on-change="checkAllSelect"></Checkbox>
 						    <Row class="one-goods-content">
 						    	<Col span="24">
 							      <Row>
@@ -192,20 +192,20 @@
                 <p>地址：{{item.address}}</p>
 		        	</div>
 	          </Col>
-	          <Col span="6" class="tbcenterbox textCenter">
+	          <Col span="5" class="tbcenterbox textCenter">
 	            <div class="tbcenter padding15">
 		        	  <p>{{item.payType}}</p>
 		        	  <p>{{item.payMoney}}</p>
 		        	</div>
 	          </Col>
-	          <Col span="6" class="tbcenterbox textCenter ">
+	          <Col span="3" class="tbcenterbox textCenter ">
 	            <div class="tbcenter padding15">
 		        	  {{item.addressType}}
 		        	</div>
 	          </Col>
-	          <Col span="4" class="tbcenterbox textCenter">
+	          <Col span="8" class="tbcenterbox textCenter">
 	            <div class="tbcenter">
-		        	  <Button type="warning" v-if="!item.pushed" @click="push(item)">立即推送</Button>
+		        	  <Button type="warning" @click="push(item, index)">立即推送</Button>
 		        	</div>
 	          </Col>
 	        </Row>
@@ -214,10 +214,11 @@
     </div>
     <Row  type="flex" align="middle" style="margin-top: 5px;padding: 10px">
     	<Col span="2">
-    	  <Checkbox v-model="allOrder" @on-change="selectAll">全选</Checkbox>    	  
+    	  <Checkbox v-model="allSelect" @on-change="selectAll">全选</Checkbox>    	  
       </Col>
       <Col span="18">
-        <Page :current="currentPage" :total="totalNumber" style="text-align: center" @on-change="loadData"></Page>
+        <Page :current="currentPage" :total="totalNumber" style="text-align: center" @on-change="loadData" v-if="isSearchIng"></Page>
+        <p v-else style="opacity: 0">no</p>
       </Col>
       <Col span="4" style="text-align: right">
     	  <Button type="primary" @click="batchOperation">批量操作</Button> 	  
@@ -232,12 +233,15 @@ import ShowBigImg from '../orderpublic/ShowBigImg'
 import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 	export default {
 		name: 'waitshiporder',
+		props:['searchapi', 'contentapi', 'userinfo', 'searchcontent'],
 		data() {
 			return {
 				baseUrlShoes: '/baseUrlShoes',
 				selectFactory: [],//推送的工厂列表
-				upLoadOrder:[],//推送的订单列表
-				allOrder: false,//是否全选
+				upLoadList:[],//推送的订单列表
+				upLoadOneIndex: -1,
+				allSelect: false,//是否全选
+				isSearchIng: false,
         imgObj: null,//生成图片信息
         imginfo: null, //放大图片信息
         ShowBigImgLeft: 0,//放大图片left
@@ -248,232 +252,7 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
           'xxxxxxx超牛逼鞋厂',
           'xxxxxxxxxxx超牛逼衣服厂'
         ],//所有工厂列表
-        orderList: [
-          {
-          	type: 'clothes',
-          	payTime: new Date().getTime()/1000,
-          	orderID: 1220,
-          	userID: 1222222,
-          	userName: 'zhudaye',
-          	pushed: false,
-          	isIn: false,          	
-          	name:'爷爷朱',
-          	phoneNumber: 18811347069,
-          	address: '重庆市扬子江商',
-          	payType:'微信',
-          	payMoney: 21000,
-          	addressType: '顺丰',
-          	goods: [
-	          	{
-	          		styleTitle:'帽衫',
-		          	sexTitle: '男',
-		          	materialTitle: '36000纯棉',
-		          	colorTitle: '红色',
-		          	sizeTitle: 'XXL',
-		          	number: 1000,
-		          	frontSmallImg: 'static/images/ceshi/qqc.png',
-	          	  frontClothImg: 'static/images/ceshi/aa.jpg'
-	          	  /*backSmallImg: 'static/images/ceshi/qqc.png',
-	          	  backClothImg: 'static/images/ceshi/aa.jpg'*/
-	          	},
-	          	{
-	          		styleTitle:'帽衫',
-		          	sexTitle: '男',
-		          	materialTitle: '36000纯棉',
-		          	colorTitle: '红色',
-		          	sizeTitle: 'XXL',
-		          	number: 1000,
-		          	frontSmallImg: 'static/images/ceshi/qqc.png',
-	          	  frontClothImg: 'static/images/ceshi/aa.jpg',
-	          	  backSmallImg: 'static/images/ceshi/qqc.png',
-	          	  backClothImg: 'static/images/ceshi/aa.jpg'
-	          	},
-	          	{
-	          		styleTitle:'帽衫',
-		          	sexTitle: '男',
-		          	materialTitle: '36000纯棉',
-		          	colorTitle: '红色',
-		          	sizeTitle: 'XXL',
-		          	number: 1000,
-		          	/*frontSmallImg: 'static/images/ceshi/qqc.png',
-	          	  frontClothImg: 'static/images/ceshi/aa.jpg'*/
-	          	  backSmallImg: 'static/images/ceshi/qqc.png',
-	          	  backClothImg: 'static/images/ceshi/aa.jpg'
-	          	}
-
-          	]          	
-          },
-          {
-          	type: 'shoes',//鞋或衣服
-          	payTime: new Date().getTime()/1000,//完成支付时间
-          	orderID: 1220,//订单ID
-
-          	ordertime: '2018/01/22',//订单日期
-          	ordernumber: 22222222222,//订单单号
-          	platformname: '爆造',//平台名称
-          	brandname: '顶顶顶顶',//品牌名称
-          	goodsname: '111111',
-          	name:'爷爷朱',//快递单姓名
-          	phonenumber: 18811347069,//快递单手机号
-          	address: '重庆市扬子江商',//快递单地址	  
-
-          	userID: 1222222,//用户ID
-          	userName: 'zhudaye',//用户名
-          	pushed: false,//是否已推送
-          	isIn: false,//是否被选中          	
-          	payType:'微信',//支付方式
-          	payMoney: 21000,//支付金额
-          	addressType: '顺丰',//快递方式
-          	goods: [//订单商品
-	          	{ /*goodsID: 1,*/
-	          		styleTitle:'草鞋',//鞋类型
-		          	sizeTitle: 44,//尺码
-		          	number: 1000,//数量
-		          	screenout: "static/images/shoes/wai.png",
-		          	screenin: "static/images/shoes/nei.png",
-		          	screenback: "static/images/shoes/hou.png",
-		          	screenfront: "static/images/shoes/qian.png",
-		          	cutfront: "static/images/shoes/shoe_front.png",
-		          	cutback: "static/images/shoes/shoe_back.png",
-		          	cutin: "static/images/shoes/shoe_in.png",
-		          	cutout: "static/images/shoes/shoe_out.png",
-		          	leftshoe:'',//已生成左脚图
-		          	rightshoe:'',//已生成右脚图
-		          	allshoe: ''//已生成总图
-	          	}
-          	]          	
-          },
-          {
-          	type: 'clothes',
-          	payTime: new Date().getTime()/1000,
-          	orderID: 1220,
-          	userID: 1222222,
-          	userName: 'zhudaye',
-          	pushed: false,
-          	isIn: false,          	
-          	name:'爷爷朱',
-          	phoneNumber: 18811347069,
-          	address: '重庆市扬子江商',
-          	payType:'微信',
-          	payMoney: 21000,
-          	addressType: '顺丰',
-          	goods: [
-	          	{
-	          		styleTitle:'帽衫',
-		          	sexTitle: '男',
-		          	materialTitle: '36000纯棉',
-		          	colorTitle: '红色',
-		          	sizeTitle: 'XXL',
-		          	number: 1000,
-		          	frontSmallImg: 'static/images/ceshi/qqc.png',
-	          	  frontClothImg: 'static/images/ceshi/aa.jpg'
-	          	  /*backSmallImg: 'static/images/ceshi/qqc.png',
-	          	  backClothImg: 'static/images/ceshi/aa.jpg'*/
-	          	}
-          	]          	
-          },
-          {
-          	type: 'clothes',
-          	payTime: new Date().getTime()/1000,
-          	orderID: 1220,
-          	userID: 1222222,
-          	userName: 'zhudaye',
-          	pushed: false,
-          	isIn: false,          	
-          	name:'爷爷朱',
-          	phoneNumber: 18811347069,
-          	address: '重庆市扬子江商',
-          	payType:'微信',
-          	payMoney: 21000,
-          	addressType: '顺丰',
-          	goods: [
-	          	{
-	          		styleTitle:'帽衫',
-		          	sexTitle: '男',
-		          	materialTitle: '36000纯棉',
-		          	colorTitle: '红色',
-		          	sizeTitle: 'XXL',
-		          	number: 1000,
-		          	frontSmallImg: 'static/images/ceshi/qqc.png',
-	          	  frontClothImg: 'static/images/ceshi/aa.jpg'
-	          	  /*backSmallImg: 'static/images/ceshi/qqc.png',
-	          	  backClothImg: 'static/images/ceshi/aa.jpg'*/
-	          	}
-          	]          	
-          },
-          {
-          	type: 'shoes',//鞋或衣服
-          	payTime: new Date().getTime()/1000,//完成支付时间
-          	orderID: 1220,//订单ID
-
-          	ordertime: '2018/01/22',//订单日期
-          	ordernumber: 22222222222,//订单单号
-          	platformname: '爆造',//平台名称
-          	brandname: '顶顶顶顶',//品牌名称
-          	goodsname: '111111',
-          	name:'爷爷朱',//快递单姓名
-          	phonenumber: 18811347069,//快递单手机号
-          	address: '重庆市扬子江商',//快递单地址	  
-
-          	userID: 1222222,//用户ID
-          	userName: 'zhudaye',//用户名
-          	pushed: false,//是否已推送
-          	isIn: false,//是否被选中          	
-          	payType:'微信',//支付方式
-          	payMoney: 21000,//支付金额
-          	addressType: '顺丰',//快递方式
-          	goods: [//订单商品
-	          	{ /*goodsID: 1,*/
-	          		styleTitle:'草鞋',//鞋类型
-		          	sizeTitle: 44,//尺码
-		          	number: 1000,//数量
-		          	screenout: "static/images/shoes/wai.png",
-		          	screenin: "static/images/shoes/nei.png",
-		          	screenback: "static/images/shoes/hou.png",
-		          	screenfront: "static/images/shoes/qian.png",
-		          	cutfront: "static/images/shoes/shoe_front.png",
-		          	cutback: "static/images/shoes/shoe_back.png",
-		          	cutin: "static/images/shoes/shoe_in.png",
-		          	cutout: "static/images/shoes/shoe_out.png",
-		          	leftshoe:'',//已生成左脚图
-		          	rightshoe:'',//已生成右脚图
-		          	allshoe: ''//已生成总图
-	          	},
-	          	{ goodsID: 1,
-	          		styleTitle:'草鞋',//鞋类型
-		          	sizeTitle: 44,//尺码
-		          	number: 1000,//数量
-		          	screenout: "static/images/shoes/wai.png",
-		          	screenin: "static/images/shoes/nei.png",
-		          	screenback: "static/images/shoes/hou.png",
-		          	screenfront: "static/images/shoes/qian.png",
-		          	cutfront: "static/images/shoes/shoe_front.png",
-		          	cutback: "static/images/shoes/shoe_back.png",
-		          	cutin: "static/images/shoes/shoe_in.png",
-		          	cutout: "static/images/shoes/shoe_out.png",
-		          	leftshoe:'',//已生成左脚图
-		          	rightshoe:'',//已生成右脚图
-		          	allshoe: ''//已生成总图
-	          	},
-	          	{ goodsID: 1,
-	          		styleTitle:'草鞋',//鞋类型
-		          	sizeTitle: 44,//尺码
-		          	number: 1000,//数量
-		          	screenout: "static/images/shoes/wai.png",
-		          	screenin: "static/images/shoes/nei.png",
-		          	screenback: "static/images/shoes/hou.png",
-		          	screenfront: "static/images/shoes/qian.png",
-		          	cutfront: "static/images/shoes/shoe_front.png",
-		          	cutback: "static/images/shoes/shoe_back.png",
-		          	cutin: "static/images/shoes/shoe_in.png",
-		          	cutout: "static/images/shoes/shoe_out.png",
-		          	leftshoe:'',//已生成左脚图
-		          	rightshoe:'',//已生成右脚图
-		          	allshoe: ''//已生成总图
-	          	}
-          	]          	
-          }
-        ]
+        orderList: null
 			}
 		},
 		components:{
@@ -482,10 +261,19 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 		},
 		watch: {
 			orderList() { 
-			  this.checkAllOrder();                                                          	
+			  this.checkAllSelect();                                                          	
+			},
+			searchcontent() {
+				if(this.searchcontent && this.searchcontent != '') {
+					this.isSearchIng = true;
+				}
 			}
 		},
 		methods: {
+			search() {
+         
+			},
+
 			checkGenerateImg(list) {
         for(let i = 0; i <list.length; i++) {
           if(list[i].type == 'shoes') {
@@ -499,7 +287,7 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
         return true;
 			},
 			loadData(page) {
-				this.allOrder = false;
+				this.allSelect = false;
         console.log(page)
 			},
 			batchOperation() {
@@ -527,7 +315,7 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 
         this.showFactory(selectList);
 			},
-			push(item) {
+			push(item, index) {
 				if(!this.checkGenerateImg([item])){
           this.$Notice.error({
             title: '错误提醒',
@@ -536,12 +324,13 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
           });
         	return;
 				}
+				this.upLoadOneIndex = index;
         this.showFactory([item]);
 			},
 			showFactory(upList) {
 				this.chooseFactory = true;
 				this.selectFactory = [];
-				this.upLoadOrder = JSON.parse(JSON.stringify(upList));
+				this.upLoadList = JSON.parse(JSON.stringify(upList));
 			},
 			ok() {
         if(this.selectFactory.length <= 0) {
@@ -552,8 +341,18 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
           });
         	return
         }
-        console.log(this.upLoadOrder);
+        console.log(this.upLoadList);
         console.log(this.selectFactory);
+        if(this.upLoadOneIndex == -1) {
+        	this.orderList = this.orderList.filter((ele) => {
+        		return !ele.isIn
+        	})
+        }else{
+        	this.orderList.splice(this.upLoadOneIndex, 1);
+        	this.upLoadOneIndex = -1;
+        }
+        this.upLoadList = [];
+        this.selectFactory = [];
       },
       cancel() {
       	this.selectFactory = [];
@@ -575,18 +374,24 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 			},
 			selectAll() {
         this.orderList = this.orderList.map((ele) => {
-					ele.isIn = this.allOrder;
+					ele.isIn = this.allSelect;
 					return ele
 				})    
 			},
-			checkAllOrder() {
+			checkAllSelect() {
+				if(this.orderList.length <= 0) {
+					this.allSelect = false
+					return 
+				}
+
         for(let i = 0; i < this.orderList.length; i++) {
         	if(!this.orderList[i].isIn){
-        		this.allOrder = false
+        		this.allSelect = false
         		return 
         	}
         }
-        this.allOrder = true
+
+        this.allSelect = true
 			},
 			createImg(type, index, item){
         this.imgObj = {
@@ -616,6 +421,232 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
       	},
       	dataType: 'json',
       	success: function(response) {
+      		_this.orderList = [
+	      		{
+	          	type: 'clothes',
+	          	payTime: new Date().getTime()/1000,
+	          	orderID: 1220,
+	          	userID: 1222222,
+	          	userName: 'zhudaye',
+	          	pushed: false,
+	          	isIn: false,          	
+	          	name:'爷爷朱',
+	          	phoneNumber: 18811347069,
+	          	address: '重庆市扬子江商',
+	          	payType:'微信',
+	          	payMoney: 21000,
+	          	addressType: '顺丰',
+	          	goods: [
+		          	{
+		          		styleTitle:'帽衫',
+			          	sexTitle: '男',
+			          	materialTitle: '36000纯棉',
+			          	colorTitle: '红色',
+			          	sizeTitle: 'XXL',
+			          	number: 1000,
+			          	frontSmallImg: 'static/images/ceshi/qqc.png',
+		          	  frontClothImg: 'static/images/ceshi/aa.jpg'
+		          	  /*backSmallImg: 'static/images/ceshi/qqc.png',
+		          	  backClothImg: 'static/images/ceshi/aa.jpg'*/
+		          	},
+		          	{
+		          		styleTitle:'帽衫',
+			          	sexTitle: '男',
+			          	materialTitle: '36000纯棉',
+			          	colorTitle: '红色',
+			          	sizeTitle: 'XXL',
+			          	number: 1000,
+			          	frontSmallImg: 'static/images/ceshi/qqc.png',
+		          	  frontClothImg: 'static/images/ceshi/aa.jpg',
+		          	  backSmallImg: 'static/images/ceshi/qqc.png',
+		          	  backClothImg: 'static/images/ceshi/aa.jpg'
+		          	},
+		          	{
+		          		styleTitle:'帽衫',
+			          	sexTitle: '男',
+			          	materialTitle: '36000纯棉',
+			          	colorTitle: '红色',
+			          	sizeTitle: 'XXL',
+			          	number: 1000,
+			          	/*frontSmallImg: 'static/images/ceshi/qqc.png',
+		          	  frontClothImg: 'static/images/ceshi/aa.jpg'*/
+		          	  backSmallImg: 'static/images/ceshi/qqc.png',
+		          	  backClothImg: 'static/images/ceshi/aa.jpg'
+		          	}
+
+	          	]          	
+	          },
+	          {
+	          	type: 'shoes',//鞋或衣服
+	          	payTime: new Date().getTime()/1000,//完成支付时间
+	          	orderID: 1220,//订单ID
+
+	          	ordertime: '2018/01/22',//订单日期
+	          	ordernumber: 22222222222,//订单单号
+	          	platformname: '爆造',//平台名称
+	          	brandname: '顶顶顶顶',//品牌名称
+	          	goodsname: '111111',
+	          	name:'爷爷朱',//快递单姓名
+	          	phonenumber: 18811347069,//快递单手机号
+	          	address: '重庆市扬子江商',//快递单地址	  
+
+	          	userID: 1222222,//用户ID
+	          	userName: 'zhudaye',//用户名
+	          	pushed: false,//是否已推送
+	          	isIn: false,//是否被选中          	
+	          	payType:'微信',//支付方式
+	          	payMoney: 21000,//支付金额
+	          	addressType: '顺丰',//快递方式
+	          	goods: [//订单商品
+		          	{ /*goodsID: 1,*/
+		          		styleTitle:'草鞋',//鞋类型
+			          	sizeTitle: 44,//尺码
+			          	number: 1000,//数量
+			          	screenout: "static/images/shoes/wai.png",
+			          	screenin: "static/images/shoes/nei.png",
+			          	screenback: "static/images/shoes/hou.png",
+			          	screenfront: "static/images/shoes/qian.png",
+			          	cutfront: "static/images/shoes/shoe_front.png",
+			          	cutback: "static/images/shoes/shoe_back.png",
+			          	cutin: "static/images/shoes/shoe_in.png",
+			          	cutout: "static/images/shoes/shoe_out.png",
+			          	leftshoe:'',//已生成左脚图
+			          	rightshoe:'',//已生成右脚图
+			          	allshoe: ''//已生成总图
+		          	}
+	          	]          	
+	          },
+	          {
+	          	type: 'clothes',
+	          	payTime: new Date().getTime()/1000,
+	          	orderID: 1220,
+	          	userID: 1222222,
+	          	userName: 'zhudaye',
+	          	pushed: false,
+	          	isIn: false,          	
+	          	name:'爷爷朱',
+	          	phoneNumber: 18811347069,
+	          	address: '重庆市扬子江商',
+	          	payType:'微信',
+	          	payMoney: 21000,
+	          	addressType: '顺丰',
+	          	goods: [
+		          	{
+		          		styleTitle:'帽衫',
+			          	sexTitle: '男',
+			          	materialTitle: '36000纯棉',
+			          	colorTitle: '红色',
+			          	sizeTitle: 'XXL',
+			          	number: 1000,
+			          	frontSmallImg: 'static/images/ceshi/qqc.png',
+		          	  frontClothImg: 'static/images/ceshi/aa.jpg'
+		          	  /*backSmallImg: 'static/images/ceshi/qqc.png',
+		          	  backClothImg: 'static/images/ceshi/aa.jpg'*/
+		          	}
+	          	]          	
+	          },
+	          {
+	          	type: 'clothes',
+	          	payTime: new Date().getTime()/1000,
+	          	orderID: 1220,
+	          	userID: 1222222,
+	          	userName: 'zhudaye',
+	          	pushed: false,
+	          	isIn: false,          	
+	          	name:'爷爷朱',
+	          	phoneNumber: 18811347069,
+	          	address: '重庆市扬子江商',
+	          	payType:'微信',
+	          	payMoney: 21000,
+	          	addressType: '顺丰',
+	          	goods: [
+		          	{
+		          		styleTitle:'帽衫',
+			          	sexTitle: '男',
+			          	materialTitle: '36000纯棉',
+			          	colorTitle: '红色',
+			          	sizeTitle: 'XXL',
+			          	number: 1000,
+			          	frontSmallImg: 'static/images/ceshi/qqc.png',
+		          	  frontClothImg: 'static/images/ceshi/aa.jpg'
+		          	  /*backSmallImg: 'static/images/ceshi/qqc.png',
+		          	  backClothImg: 'static/images/ceshi/aa.jpg'*/
+		          	}
+	          	]          	
+	          },
+	          {
+	          	type: 'shoes',//鞋或衣服
+	          	payTime: new Date().getTime()/1000,//完成支付时间
+	          	orderID: 1220,//订单ID
+
+	          	ordertime: '2018/01/22',//订单日期
+	          	ordernumber: 22222222222,//订单单号
+	          	platformname: '爆造',//平台名称
+	          	brandname: '顶顶顶顶',//品牌名称
+	          	goodsname: '111111',
+	          	name:'爷爷朱',//快递单姓名
+	          	phonenumber: 18811347069,//快递单手机号
+	          	address: '重庆市扬子江商',//快递单地址	  
+
+	          	userID: 1222222,//用户ID
+	          	userName: 'zhudaye',//用户名
+	          	pushed: false,//是否已推送
+	          	isIn: false,//是否被选中          	
+	          	payType:'微信',//支付方式
+	          	payMoney: 21000,//支付金额
+	          	addressType: '顺丰',//快递方式
+	          	goods: [//订单商品
+		          	{ /*goodsID: 1,*/
+		          		styleTitle:'草鞋',//鞋类型
+			          	sizeTitle: 44,//尺码
+			          	number: 1000,//数量
+			          	screenout: "static/images/shoes/wai.png",
+			          	screenin: "static/images/shoes/nei.png",
+			          	screenback: "static/images/shoes/hou.png",
+			          	screenfront: "static/images/shoes/qian.png",
+			          	cutfront: "static/images/shoes/shoe_front.png",
+			          	cutback: "static/images/shoes/shoe_back.png",
+			          	cutin: "static/images/shoes/shoe_in.png",
+			          	cutout: "static/images/shoes/shoe_out.png",
+			          	leftshoe:'',//已生成左脚图
+			          	rightshoe:'',//已生成右脚图
+			          	allshoe: ''//已生成总图
+		          	},
+		          	{ goodsID: 1,
+		          		styleTitle:'草鞋',//鞋类型
+			          	sizeTitle: 44,//尺码
+			          	number: 1000,//数量
+			          	screenout: "static/images/shoes/wai.png",
+			          	screenin: "static/images/shoes/nei.png",
+			          	screenback: "static/images/shoes/hou.png",
+			          	screenfront: "static/images/shoes/qian.png",
+			          	cutfront: "static/images/shoes/shoe_front.png",
+			          	cutback: "static/images/shoes/shoe_back.png",
+			          	cutin: "static/images/shoes/shoe_in.png",
+			          	cutout: "static/images/shoes/shoe_out.png",
+			          	leftshoe:'',//已生成左脚图
+			          	rightshoe:'',//已生成右脚图
+			          	allshoe: ''//已生成总图
+		          	},
+		          	{ goodsID: 1,
+		          		styleTitle:'草鞋',//鞋类型
+			          	sizeTitle: 44,//尺码
+			          	number: 1000,//数量
+			          	screenout: "static/images/shoes/wai.png",
+			          	screenin: "static/images/shoes/nei.png",
+			          	screenback: "static/images/shoes/hou.png",
+			          	screenfront: "static/images/shoes/qian.png",
+			          	cutfront: "static/images/shoes/shoe_front.png",
+			          	cutback: "static/images/shoes/shoe_back.png",
+			          	cutin: "static/images/shoes/shoe_in.png",
+			          	cutout: "static/images/shoes/shoe_out.png",
+			          	leftshoe:'',//已生成左脚图
+			          	rightshoe:'',//已生成右脚图
+			          	allshoe: ''//已生成总图
+		          	}
+	          	]          	
+	          }
+      		]
       		_this.orderList[1].goods[0].cutin = response.data.cutin;
       		_this.orderList[1].goods[0].cutout = response.data.cutout;
       		_this.orderList[1].goods[0].cutfront = response.data.cutfront;
@@ -624,6 +655,9 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
       		_this.orderList[1].goods[0].screenout = response.data.screenout;
       		_this.orderList[1].goods[0].screenfront = response.data.screenfront;
       		_this.orderList[1].goods[0].screenback = response.data.screenback;
+      		for(let ele of _this.orderList) {
+      			ele.isIn = false;
+      		}
       	},error: function(e) {
       		console.log(e)
       	}

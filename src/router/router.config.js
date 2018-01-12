@@ -15,14 +15,23 @@ export default [
 	  name: 'user',
 	  label: '用户',
 	  fileUrl: '/layout/user',
-	  url: '/layout/user/management',
+	  url: '/layout/user/management/alluser',
 	  component: 'UserIndex.vue',
 	  children: [
 	    {
 	      name: 'management',
 	      label: '用户管理',
-	      url: '/layout/user/management',
-	      component: 'Management.vue'
+	      fileUrl: '/layout/user/management',
+	      url: '/layout/user/management/alluser',
+	      component: 'Management.vue',
+	      children: [
+	        {
+	        	name: 'alluser',
+	        	label: '所有用户',
+	        	url: '/layout/user/management/alluser',
+	          component: 'AllUser.vue'
+	        }
+	      ]
 	    },
 	    {
 	      name: 'adduser',

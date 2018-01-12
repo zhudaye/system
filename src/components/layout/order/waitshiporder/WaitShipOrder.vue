@@ -8,7 +8,7 @@
       <Col span="12" class="top-right">
         <Input v-model="search" placeholder="按时间查询" style="width: 300px">
         </Input>
-        <Button type="primary">搜索</Button>
+        <Button type="primary" @click="submit">搜索</Button>
       </Col>
     </Row>
     <component :is="currentComponent"></component>
@@ -39,6 +39,9 @@
       changePush(status) {
 				if(this.isPushed == status) return;
 				this.isPushed = status
+			},
+			submit() {
+				
 			}
     }
 	}

@@ -4,14 +4,31 @@ import Layout from '@/components/Layout'
 import Login from '@/components/Login'
 import routerconfig from './router.config.js'
 Vue.use(Router)
-
+//现在只做了三层路由嵌套
 let rout = [{path: '',redirect: 'home'}].concat(routerconfig.map((ele) => {
   let children = [];
   if(ele.children) {
     children = ele.children.map((child) => {
-      return {
-        path: child.name,
-        component: resolve => require(['../components' + child.url + '/' + child.component], resolve)
+      let children2 = [];
+      if(child.children) {
+        children2 = child.children.map((child2) => {
+          return {
+            path: child2.name,
+            component: resolve => require(['../components' + child2.url + '/' + child2.component], resolve)
+          }
+        })
+      }
+      if(children2.length > 0) {
+        return {
+          path: child.name,
+          component: resolve => require(['../components' + child.fileUrl + '/' + child.component], resolve),
+          children: children2
+        }
+      }else{
+        return {
+          path: child.name,
+          component: resolve => require(['../components' + child.url + '/' + child.component], resolve)
+        }
       }
     })
   }
