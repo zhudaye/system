@@ -1,26 +1,5 @@
 <template>
 	<div class="pushedorder">
-    <Row class="table-title">
-      <Col span="12"> 
-	      宝贝
-	    </Col>
-      <Col span="12">
-        <Row>
-        	<Col span="8">
-        	  收货人
-          </Col>
-          <Col span="5">
-            支付方式及金额
-          </Col>
-          <Col span="3">
-            物流
-          </Col>
-          <Col span="8">
-            状态
-          </Col>
-        </Row>
-      </Col>
-    </Row>
     <div class="one-order" v-if="orderList" v-for="(item, index) in orderList" :key="index">
     	<Row class="one-order-header">
     		<Col span="16" class="order-header-info"> 
@@ -66,25 +45,25 @@
 					      	  <p class="hidden" v-else>无</p>
 					        </Col>
 					        <Col span="14">
-					          <Row class="textCenter" >
+					          <Row class="textCenter fiveColor">
 					          	<Col span="4">
-					          	  <p>{{oneGoods.styleTitle}}</p>
+					          	  <span>{{oneGoods.styleTitle}}</span>
 					            </Col>
 					            <Col span="5">
-					          	  <p>{{oneGoods.materialTitle}}</p>
+					          	  <span>{{oneGoods.materialTitle}}</span>
 					            </Col>
                       <Col span="3">
      
-                        <p>{{oneGoods.sexTitle}}</p>
+                        <span>{{oneGoods.sexTitle}}</span>
                       </Col>
                       <Col span="4">
-					          	  <p>{{oneGoods.colorTitle}}</p>
+					          	  <span>{{oneGoods.colorTitle}}</span>
 					            </Col>
 					            <Col span="4">
-					          	  <p>{{oneGoods.sizeTitle}}</p>
+					          	  <span>{{oneGoods.sizeTitle}}</span>
 					            </Col>
 					            <Col span="4">
-					          	  <p>x{{oneGoods.number}}</p>
+					          	  <span>x{{oneGoods.number}}</span>
 					            </Col>					         
 					          </Row>
 					        </Col>
@@ -149,15 +128,15 @@
 							    <Col span="8" class="shoe-info">
 							      <Row>
 							        <Col span="24">
-							          <Row class="textCenter" >
+							          <Row class="textCenter fiveColor" >
 							          	<Col span="8">
-							          	  <p>{{oneGoods.styleTitle}}</p>
+							          	  <span>{{oneGoods.styleTitle}}</span>
 							            </Col>
 							            <Col span="8">
-							          	  <p>{{oneGoods.sizeTitle}}</p>
+							          	  <span>{{oneGoods.sizeTitle}}</span>
 							            </Col>
 		                      <Col span="8">		    
-		                        <p>x{{oneGoods.number}}</p>
+		                        <span>x{{oneGoods.number}}</span>
 		                      </Col>    
 							          </Row>
 							        </Col>
@@ -536,10 +515,6 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
   	text-align: right;
   }
 
-  .table-title{
-  	margin: 5px 0;
-  }
-
   .one-order{
   	margin-top: 5px;
   	font-weight: bold;
@@ -746,5 +721,38 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 
   .textCenter{
   	text-align: center;
+  }
+
+  .fiveColor>div>span{
+  	color: #fff;
+  	display: inline-block;
+  	padding: 4px;
+  	border-radius: 6px;
+  	min-width: 50px;
+  	text-align: center;
+  }
+
+  .fiveColor>div:nth-child(1) span{
+  	background-color: #ed3f14;
+  }
+
+  .fiveColor>div:nth-child(2) span{
+  	background-color: #ff9900;
+  }
+
+  .fiveColor>div:nth-child(3) span{
+  	background-color: #19be6b;
+  }
+
+  .fiveColor>div:nth-child(4) span{
+  	background-color: #2d8cf0;
+  }
+
+  .fiveColor>div:nth-child(5) span{
+  	background-color: #1c2438;
+  }
+
+  .fiveColor>div:nth-child(6) span{
+  	background-color: #EF4395;
   }
 </style>

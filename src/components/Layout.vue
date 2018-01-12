@@ -23,7 +23,9 @@
       </div>
       <div class="layout-content">
         <div class="layout-content-main">
-          <router-view/>
+          <transition name="fade">
+            <router-view></router-view>
+          </transition>
         </div>
       </div>
       <div class="layout-copy">

@@ -2,6 +2,7 @@
 	<div class="waitpushorder">
     <Modal
       width="400"
+      :scrollable = "true"
       v-model="chooseFactory"
       title="选择推送工厂"
       ok-text="确定"
@@ -13,27 +14,6 @@
         <Checkbox v-for="(factory, factoryIndex) in factoryList" :key="factoryIndex" :label="factory"></Checkbox>
       </CheckboxGroup>
     </Modal>
-    <Row class="table-title">
-      <Col span="12"> 
-	      宝贝
-	    </Col>
-      <Col span="12">
-        <Row>
-        	<Col span="8">
-        	  收货人
-          </Col>
-          <Col span="5">
-            支付方式及金额
-          </Col>
-          <Col span="3">
-            物流
-          </Col>
-          <Col span="8">
-            状态
-          </Col>
-        </Row>
-      </Col>
-    </Row>
     <div class="one-order" v-if="orderList" v-for="(item, index) in orderList" :key="index">
     	<Row class="one-order-header">
     		<Col span="20" class="order-header-info"> 
@@ -80,25 +60,25 @@
 					      	  <p class="hidden" v-else>无</p>
 					        </Col>
 					        <Col span="14">
-					          <Row class="textCenter" >
+					          <Row class="textCenter fiveColor">
 					          	<Col span="4">
-					          	  <p>{{oneGoods.styleTitle}}</p>
+					          	  <span>{{oneGoods.styleTitle}}</span>
 					            </Col>
 					            <Col span="5">
-					          	  <p>{{oneGoods.materialTitle}}</p>
+					          	  <span>{{oneGoods.materialTitle}}</span>
 					            </Col>
                       <Col span="3">
      
-                        <p>{{oneGoods.sexTitle}}</p>
+                        <span>{{oneGoods.sexTitle}}</span>
                       </Col>
                       <Col span="4">
-					          	  <p>{{oneGoods.colorTitle}}</p>
+					          	  <span>{{oneGoods.colorTitle}}</span>
 					            </Col>
 					            <Col span="4">
-					          	  <p>{{oneGoods.sizeTitle}}</p>
+					          	  <span>{{oneGoods.sizeTitle}}</span>
 					            </Col>
 					            <Col span="4">
-					          	  <p>x{{oneGoods.number}}</p>
+					          	  <span>x{{oneGoods.number}}</span>
 					            </Col>					         
 					          </Row>
 					        </Col>
@@ -164,15 +144,15 @@
 							    <Col span="8" class="shoe-info">
 							      <Row>
 							        <Col span="24">
-							          <Row class="textCenter" >
+							          <Row class="textCenter fiveColor">
 							          	<Col span="8">
-							          	  <p>{{oneGoods.styleTitle}}</p>
+							          	  <span>{{oneGoods.styleTitle}}</span>
 							            </Col>
 							            <Col span="8">
-							          	  <p>{{oneGoods.sizeTitle}}</p>
+							          	  <span>{{oneGoods.sizeTitle}}</span>
 							            </Col>
 		                      <Col span="8">		    
-		                        <p>x{{oneGoods.number}}</p>
+		                        <span>x{{oneGoods.number}}</span>
 		                      </Col>    
 							          </Row>
 							        </Col>
@@ -217,7 +197,7 @@
     	  <Checkbox v-model="allSelect" @on-change="selectAll">全选</Checkbox>    	  
       </Col>
       <Col span="18">
-        <Page :current="currentPage" :total="totalNumber" style="text-align: center" @on-change="loadData" v-if="isSearchIng"></Page>
+        <Page :current="currentPage" :total="totalNumber" style="text-align: center" @on-change="loadData" v-if="!isSearchIng"></Page>
         <p v-else style="opacity: 0">no</p>
       </Col>
       <Col span="4" style="text-align: right">
@@ -533,7 +513,7 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 	          	goods: [
 		          	{
 		          		styleTitle:'帽衫',
-			          	sexTitle: '男',
+			          	sexTitle: '童装',
 			          	materialTitle: '36000纯棉',
 			          	colorTitle: '红色',
 			          	sizeTitle: 'XXL',
@@ -690,10 +670,6 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 
   .top-nav .top-right{
   	text-align: right;
-  }
-
-  .table-title{
-  	margin: 5px 0;
   }
 
   .one-order{
@@ -899,5 +875,38 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 
   .textCenter{
   	text-align: center;
+  }
+
+  .fiveColor>div>span{
+  	color: #fff;
+  	display: inline-block;
+  	padding: 4px;
+  	border-radius: 6px;
+  	min-width: 50px;
+  	text-align: center;
+  }
+
+  .fiveColor>div:nth-child(1) span{
+  	background-color: #ed3f14;
+  }
+
+  .fiveColor>div:nth-child(2) span{
+  	background-color: #ff9900;
+  }
+
+  .fiveColor>div:nth-child(3) span{
+  	background-color: #19be6b;
+  }
+
+  .fiveColor>div:nth-child(4) span{
+  	background-color: #2d8cf0;
+  }
+
+  .fiveColor>div:nth-child(5) span{
+  	background-color: #1c2438;
+  }
+
+  .fiveColor>div:nth-child(6) span{
+  	background-color: #EF4395;
   }
 </style>

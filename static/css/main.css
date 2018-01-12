@@ -16,7 +16,7 @@ body{
   padding: 10px 15px 0;
 }
 .layout-content{
-  margin: 0 5px;
+  padding: 0 5px;
   margin-top: 65px;
   background-color: #f5f7f9;
   border-radius: 4px;

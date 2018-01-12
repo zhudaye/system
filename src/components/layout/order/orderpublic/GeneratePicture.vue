@@ -405,7 +405,6 @@ function loadImg(url) {
   }
 
   #cutbox{
-   	width: 4400px;
    	overflow: hidden;
   }
 
@@ -496,21 +495,21 @@ function loadImg(url) {
   .topNumberLeft{
     left: 32%;
     top: 68%;
-    -webkit-transform: rotateZ(81deg);
-    -moz-transform: rotateZ(81deg);
-    -ms-transform: rotateZ(81deg);
-    -o-transform: rotateZ(81deg);
-    transform: rotateZ(81deg);
+    -webkit-transform: rotateZ(90deg);
+    -moz-transform: rotateZ(90deg);
+    -ms-transform: rotateZ(90deg);
+    -o-transform: rotateZ(90deg);
+    transform: rotateZ(90deg);
   }
 
   .topNumberRight{
     right: 32%;
     top: 68%;
-    -webkit-transform: rotateZ(-81deg);
-    -moz-transform: rotateZ(-81deg);
-    -ms-transform: rotateZ(-81deg);
-    -o-transform:rotateZ(-81deg);
-    transform: rotateZ(-81deg);
+    -webkit-transform: rotateZ(-90deg);
+    -moz-transform: rotateZ(-90deg);
+    -ms-transform: rotateZ(-90deg);
+    -o-transform:rotateZ(-90deg);
+    transform: rotateZ(-90deg);
   }
 
   .orderInfo{
@@ -533,7 +532,7 @@ function loadImg(url) {
     position: absolute;
     left: 50%;
     top: 75%;
-    width: 390px;
+    width: 198px;
     text-align: center;
     -webkit-transform: translate(-50%, 0);
     -moz-transform: translate(-50%, 0);
@@ -543,9 +542,9 @@ function loadImg(url) {
   }
 
   .logoTitle{
-    padding: 10px 0;
+    padding: 5px 0;
     width: 100%;
-    font-size: 56px;
+    font-size: 30px;
     font-weight: bold;
     display: inline-block;
   }
@@ -553,10 +552,10 @@ function loadImg(url) {
   .logo{
     background-color: #fff;
     border: 2px solid #666;
-    height: 176px;
+    height: 90px;
     letter-spacing: 5px;
-    line-height: 168px;
-    font-size: 80px;
+    line-height: 88px;
+    font-size: 38px;
     font-weight: bold;
     display: inline-block;
     width: 100%;
@@ -564,9 +563,9 @@ function loadImg(url) {
 
   .logoSize{
     display: inline-block;
-    padding-top: 10px;
-    font-size: 24px;
-    letter-spacing: 2px;
+    padding-top: 5px;
+    font-size: 14px;
+    letter-spacing: 1px;
   }
 
   .bottomImgBox{
@@ -589,8 +588,8 @@ function loadImg(url) {
     right: 15px;
     top: 15px;
     content: '';
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
     border: 2px solid #000;
     border-radius: 50%;
   }
@@ -608,6 +607,7 @@ function loadImg(url) {
 
   .bottomImgBox>.thumbnailBox>div>span{
     position: absolute;
+    font-size: 22px;
     top: 10px;
     left: 10px;
     z-index: 999;
@@ -630,16 +630,17 @@ function loadImg(url) {
   }
 
   .orderInfo p{
+    font-size: 18px;
    	margin-top: 5px;
    	line-height: 24px;
   }
 
   .oneInfo{
-   	width: 250px;
+   	width: 296px;
   }
 
   .orderInfo p span.underline{
-   	width: calc(100% - 80px);
+   	width: calc(100% - 90px);
    	position: relative;
    	display: inline-block;
   }
@@ -648,7 +649,7 @@ function loadImg(url) {
    	position: relative;
    	text-align: center;
    	padding: 10px 0;
-   	font-size: 18px;
+   	font-size: 22px;
    	font-weight: bold;
   }
 
@@ -668,8 +669,8 @@ function loadImg(url) {
     left: 10px;
     top: 50%;
     border: 2px solid #e60012;
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     z-index: 99999;
     -webkit-transform: translate(0, -50%);
