@@ -96,7 +96,8 @@
         </table>
         <div class="mtp10 ivu-row">
             <div class="ivu-col ivu-col-span-8">
-                <Button type="primary" @click="addOrder">添加</Button>
+                <!-- <Button type="primary" @click="addOrder">添加</Button> -->
+        <router-link class="ivu-btn ivu-btn-primary" v-bind:to="'/layout/user/adduser'">添加</router-link>
                 <Button type="error"  @click="deleteOrderAll">删除</Button>
             </div>
             <div class="ivu-col ivu-col-span-8">
@@ -205,12 +206,9 @@ export default {
         }
        })
       },
-      //单独处理成功
+      //添加
         addOrder() {
-        },
-        pagesize(num){
-          var that=num;
-          alert(that);
+     
 
         }
     },
