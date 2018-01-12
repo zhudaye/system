@@ -13,28 +13,37 @@
               </h2>
               </Col>
         <Col span="8">
-  <Button @click="onTab(index)" v-for="(tabs,index) in tabButton" :class="{active: showTab == index}" style="margin-right:10px">{{tabs}}</Button>
-            </Col>
-            <Col span="8" style="text-align: center;">
-             
-            </Col>
+  <strong style="font-size:15px;">状态：</strong><Button @click="onTab(index)" v-for="(tabs,index) in tabButton" :class="{active: showTab == index}" style="margin-right:10px">{{tabs}}</Button>
+</Col>
+            <Col span="8" style="text-align: center;"></Col>
             <Col span="8" style="text-align: right;">
-            <Input placeholder="按时间查询" style="width:55%"></Input>
+             <strong style="font-size:15px;">下单时间：</strong>
+           <DatePicker type="date" placeholder="Select date" style="width: 60%"></DatePicker>
             <Button type="primary">搜索</Button>
             </Col>
         </Row>
         
 <div v-if="showTab === 0">
-   
-        <table id="tableExcel" class="mtp57" width="100%" border="1" cellspacing="0" cellpadding="0" style="text-align:center">
-            <tr class="title">
+ <Row class="mtp57">
+ <Col class="title1" span="24" >
+  <Button @click="onTab1(index)" v-for="(tabs1,index) in tabButton1" 
+  :class="{active: showTab1 == index}" style="margin-left:15px;" size="small">
+     {{tabs1}}
+  </Button>
+</Col>
+  </Row>
+  <div  v-if="showTab1 === 0"> 
+          <table id="tableExcel" class="mtop0" width="100%" border="1" cellspacing="0" cellpadding="0" style="text-align:center">
+            <tr>
                 <th> <Checkbox v-model="allSelect" @on-change="selectAll"></Checkbox></th>
-                <th>用户昵称</th>
-                <th>用户ID</th>
-                <th>提现金额</th>
-                <th>支付宝信息</th>
-                <th>申请时间</th>
+                <th>订单号</th>
+                <th>支付时间</th>
+                <th>收货人</th>
+                <th>联系电话</th>
                 <th>状态</th>
+                <th>支付类型</th>
+                <th>金额</th>
+                <th>操作</th>
             </tr>
             <tr v-for="(user, index) in users" :key="user.id">
                 <td>
@@ -45,64 +54,54 @@
                 <td>{{user.email}}</td>
                 <td>{{user.phone}}</td>
                 <td>{{user.website}}</td>
+                <td>{{user.phone}}</td>
+                <td>{{user.website}}</td>
                 <td>
-                    <Button @click="deleteSuccse" class="ivu-btn-primary ivu-btn-small">成功</Button>
+                    <Button @click="deleteSuccse" class="ivu-btn-primary ivu-btn-small">详情</Button>
                     <Button @click="deleteFaile(index)" class="ivu-btn-error ivu-btn-small" :id="user.id">
-                        失败
+                        分发
                     </Button>
                 </td>
             </tr>
         </table>
         <div class="mtp10 ivu-row">
             <div class="ivu-col ivu-col-span-12">
-                <Button type="ghost" @click="deleteSuccseAll">批量处理成功</Button>
+                <Button type="primary" @click="deleteSuccseAll">分发</Button>
             </div>
+             
             <div class="ivu-col ivu-col-span-12" style="text-align: right;">
-                <Button type="ghost"  @click="deleteFaileAll">批量处理失败</Button>
+                
             </div>
         </div>
+  </div>
+  <!-- 已推送未推送 -->
+   <div  v-if="showTab1 === 1">
+      <Table border :columns="columns6" :data="data6"></Table>
+   </div>
 </div>
-<div  v-if="showTab === 1">  
-     <table id="tableExcel" width="100%" border="1" cellspacing="0" cellpadding="0" style="text-align:center">
-            <tr class="title">
-                <th>用户昵称</th>
-                <th>用户ID</th>
-                <th>提现金额</th>
-                <th>支付宝信息</th>
-                <th>申请时间</th>
-                <th>状态</th>
-            </tr>
-            <tr v-for="comment in comments">
-                <td>{{comment.id}}</td>
-                <td>{{comment.name}}</td>
-                <td>{{comment.email}}</td>
-                <td>{{comment.email}}</td>
-                <td>{{comment.email}}</td>
-                <td>  提现成功 </td>
-            </tr>
-        </table>
-        </div>
-<div  v-if="showTab === 2">
-     <table id="tableExcel" width="100%" border="1" cellspacing="0" cellpadding="0" style="text-align:center">
-            <tr class="title">
-                <th>用户昵称</th>
-                <th>用户ID</th>
-                <th>提现金额</th>
-                <th>支付宝信息</th>
-                <th>申请时间</th>
-                <th>失败原因</th>
-            </tr>
-            <tr v-for="todo in todos">
-                <td>{{todo.id}}</td>
-                <td>{{todo.userId}}</td>
-                <td>{{todo.userId}}</td>
-                <td>{{todo.userId}}</td>
-                <td>{{todo.title}}</td>
-                <td>{{todo.title}} </td>
-            </tr>
-        </table>
+
+<!-- 1 -->
+<div  v-if="showTab === 1" class="mtp57"> 
+    <Table border :columns="columns7" :data="data6" size="small"></Table>
 </div>
-    </div>
+<!-- 2 -->
+<div  v-if="showTab === 2" class="mtp57">
+    <Table border :columns="columns7" :data="data6" size="small"></Table>
+</div>
+<!-- 3 -->
+<div  v-if="showTab === 3" class="mtp57">
+    <Table border :columns="columns7" :data="data6" size="small"></Table>
+ </div>
+<!-- 4 -->
+<div  v-if="showTab === 4" class="mtp57">
+    <Table border :columns="columns7" :data="data6" size="small"></Table>
+</div>
+
+<!-- 分页 -->
+ <div class="ivu-col ivu-col-span-24" style="text-align:center;background: #f5f7f9;" >
+   <Page :total="40" size="small" show-elevator show-sizer @on-change="pagesize"></Page>
+</div>
+</div>
 </template>
 
 <script>
@@ -112,11 +111,129 @@ export default {
     data() {
         return {
             tabButton: ['待支付','已支付','已取消','已快递','已完成'],
+            tabButton1: ['未推送','已推送'],
             showTab : 0,
-           users: [],
-           comments: [],
-           todos: [],
-          allSelect: false,
+            showTab1 : 0,
+            users: [],
+            comments: [],
+            todos: [],
+            pushs:[],
+            allSelect: false,
+              columns7: [
+               
+                    {   align: 'center',
+                        title: '订单号',
+                        key: 'id'
+                    },
+                    {   align: 'center',
+                        title: '推送时间',
+                        key: 'uid'
+                    },
+                     {  align: 'center',
+                        title: '收件人',
+                        key: 'title'
+                    },
+                     {  align: 'center',
+                        title: '联系电话',
+                        key: 'phone'
+                    },
+                     {  align: 'center',
+                        title: '支付类型',
+                        key: 'address'
+                    },
+                     {  align: 'center',
+                        title: '收件人',
+                        key: 'address'
+                    },
+                     {
+                        title: 'Action',
+                        key: 'action',
+                        width: 150,
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show(params.index)
+                                        }
+                                    }
+                                }, 'View'),
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.remove(params.index)
+                                        }
+                                    }
+                                }, 'Delete')
+                            ]);
+                        }
+                    }
+                ],
+            columns6: [
+               
+                    {   align: 'center',
+                        title: '订单号',
+                        key: 'id'
+                    },
+                    {   align: 'center',
+                        title: '推送时间',
+                        key: 'uid'
+                    },
+                     {  align: 'center',
+                        title: '收件人',
+                        key: 'title'
+                    },
+                     {  align: 'center',
+                        title: '联系电话',
+                        key: 'phone'
+                    },
+                     {  align: 'center',
+                        title: '支付类型',
+                        key: 'address'
+                    },
+                     {  align: 'center',
+                        title: '收件人',
+                        key: 'address'
+                    },
+                    {
+                        title: 'Action',
+                        key: 'action',
+                        width: 150,
+                        align: 'center',
+                        render: (h, params) => {
+                            return h('div', [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        marginRight: '5px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show(params.index)
+                                        }
+                                    }
+                                }, 'View'),
+                               
+                            ]);
+                        }
+                    }
+                ],
+                data6: [  ]
         }
     },
     watch: {
@@ -135,6 +252,9 @@ export default {
       },
        onTab(index) {
        this.showTab = index;
+      },
+       onTab1(index) {
+       this.showTab1 = index;
       },
         changeAllSelect(){
             for(let i=0; i< this.users.length; i++){
@@ -251,7 +371,7 @@ export default {
       this.comments = data.data;
     }),
       this.$http.get("http://jsonplaceholder.typicode.com/todos").then((data) => {
-      this.todos = data.data;
+      this.data6 = data.data;
     })
   }
 }
@@ -303,15 +423,24 @@ body {
 .title {
   height: 32px !important;
   background-color: #f8f8f9 !important;
+  line-height: 32px;
+}
+.title1 {
+  border:1px solid #e9eaec!important;background:#ebebeb!important;
+  line-height: 32px;border-bottom:hidden;
 }
 #tableExcel tr {
   background: white;
   line-height: 1.5;
   height: 40px;
 }
+#tableExcel tr:hover {
+  background: #F0F8FF;
+}
 #tableExcel td,
 #tableExcel th {
   border-bottom: 1px solid #e9eaec;
-}
+} 
 #tableExcel td:last-child{width:150px;}
+#tableExcel tr:first-child{background-color: #f8f8f9;}
 </style>

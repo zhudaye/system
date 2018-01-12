@@ -1,7 +1,9 @@
 *{border: none}
 .mtp10{margin-top: 10px}
 #tableExcel{margin-top: 30px}
+#tableExcel tr:hover {background: #F0F8FF; }
 .mtp57{margin-top: 57px!important}
+.mtop0{margin-top: 0!important}
 .ptp10{padding-top: 10px}
 .mtb10{margin-bottom: 10px}
 .floatRight{float:right;}
