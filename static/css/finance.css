@@ -1,0 +1,17 @@
+*{border: none}
+.mtp10{margin-top: 10px}
+#tableExcel{margin-top: 30px}
+#tableExcel tr:hover {background: #F0F8FF; }
+.mtp57{margin-top: 57px!important}
+.mtop0{margin-top: 0!important}
+.ptp10{padding-top: 10px}
+.mtb10{margin-bottom: 10px}
+.floatRight{float:right;}
+ 
+.layout-content-main{background: #f5f7f9;}
+.postiFix{position:fixed; width:90%;background: #f5f7f9;height: 45px;line-height: 45px;top:60px;z-index:99;}
+.postiFix2{position:fixed; width:90%;background: #f5f7f9;height: 90px;line-height:45px;top:60px;z-index:99;}
+.userTiltle{ width:100%;background: #f5f7f9;height: 90px;position:fixed;top:60px;z-index: 99}
+.userTiltleRi{float:right;width: 17%; height:90px;}
+.userTiltleLe{float:left;width: 83%;height: 90px;}
+.Row45{height: 45px;line-height: 45px;}

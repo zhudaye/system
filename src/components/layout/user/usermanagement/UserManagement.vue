@@ -36,9 +36,9 @@
           <table id="tableExcel" class="mtop0" width="100%" border="1" cellspacing="0" cellpadding="0" style="text-align:center">
             <tr>
                 <th> <Checkbox v-model="allSelect" @on-change="selectAll"></Checkbox></th>
-                <th>用户名</th>
-                <th>UID</th>
-                <th>作品总数</th>
+                <th>订单号</th>
+                <th>支付时间</th>
+                <th>收货人</th>
                 <th>联系电话</th>
                 <th>状态</th>
                 <th>支付类型</th>
@@ -92,6 +92,10 @@
 <div  v-if="showTab === 3" class="mtp57">
     <Table border :columns="columns7" :data="data6" size="small"></Table>
  </div>
+<!-- 4 -->
+<div  v-if="showTab === 4" class="mtp57">
+    <Table border :columns="columns7" :data="data6" size="small"></Table>
+</div>
 
 <!-- 分页 -->
  <div class="ivu-col ivu-col-span-24" style="text-align:center;background: #f5f7f9;" >
@@ -103,12 +107,13 @@
 <script>
 
 export default {
-    name: 'DesignerReview',
+    name: 'UserManagement',
     data() {
         return {
             tabButton: ['待支付','已支付','已取消','已快递','已完成'],
             tabButton1: ['未推送','已推送'],
             showTab : 0,
+            showTab1 : 0,
             users: [],
             comments: [],
             todos: [],
@@ -247,6 +252,9 @@ export default {
       },
        onTab(index) {
        this.showTab = index;
+      },
+       onTab1(index) {
+       this.showTab1 = index;
       },
         changeAllSelect(){
             for(let i=0; i< this.users.length; i++){

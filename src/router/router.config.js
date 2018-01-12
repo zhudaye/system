@@ -74,6 +74,12 @@ export default [
 	      label: '推荐用户',
 	      url: '/layout/user/recommendeduser',
 	      component: 'RecommendedUser.vue'
+	    },
+	    {
+	      name: 'usermanagement',
+	      label: '用户管理',
+	      url: '/layout/user/usermanagement',
+	      component: 'UserManagement.vue'
 	    }
 	  ]
 	},
