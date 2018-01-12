@@ -4,7 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import iView from 'iview'
-import $ from 'jquery'
 import axios from 'axios'
 Vue.prototype.$http=axios  
 Vue.use(iView)
