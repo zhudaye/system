@@ -1,7 +1,6 @@
 'use strict'
 // Template version: 1.2.7
 // see http://vuejs-templates.github.io/webpack for documentation.
-
 const path = require('path')
 
 module.exports = {
@@ -10,7 +9,23 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+        '/baseUrlShoes': {
+            target: 'http://192.168.2.239/apipic.boomake.com/shoes/',
+            changeOrigin: true,
+            pathRewrite: {
+              '^/baseUrlShoes': ''
+            }
+        },
+        '/api': {
+            target: 'http://192.168.2.239/bzadmin/public/index.php',
+            changeOrigin: true,
+            pathRewrite: {
+              '^/api': ''
+            }
+        }
+
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

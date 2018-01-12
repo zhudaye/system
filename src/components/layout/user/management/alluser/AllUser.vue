@@ -1,14 +1,14 @@
 <template>
-	<div class="Management">
-    <router-view/>
+	<div class="alluser">
+		<div>{{name}}</div>
 	</div>
 </template>
 <script>
 export default {
-    name: 'Management',
+    name: 'AllUser',
     data() {
       return {
-        name:'Management'
+        name:'AllUser'
       }
     },
     methods: {

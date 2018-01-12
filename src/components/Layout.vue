@@ -21,7 +21,7 @@
           </div>
         </div>
       </div>
-      <div class="layout-content" style='margin-top: 75px'>
+      <div class="layout-content">
         <div class="layout-content-main">
           <router-view/>
         </div>
