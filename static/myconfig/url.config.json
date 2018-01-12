@@ -1,0 +1,4 @@
+{
+	"baseShoes": "http://192.168.2.239/apipic.boomake.com/shoes/",
+	"baseApi": "http://192.168.2.239/bzadmin/public/index.php"
+}

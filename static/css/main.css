@@ -16,10 +16,16 @@ body{
   padding: 10px 15px 0;
 }
 .layout-content{
-  margin: 15px;
-  overflow: hidden;
-  background: #fff;
+  margin: 0 5px;
+  margin-top: 65px;
+  background-color: #f5f7f9;
   border-radius: 4px;
+}
+
+.layout-content:after{
+  content: '';
+  display: block;
+  clear: both;
 }
 .layout-content-main{
 }
@@ -111,3 +117,7 @@ body{
 .mtp10{margin-top: 10px}
 .mtb10{margin-bottom: 10px}
 .floatRight{float:right;}
+
+.demo-spin-icon-load{
+  animation: ani-demo-spin 1s linear infinite;
+}

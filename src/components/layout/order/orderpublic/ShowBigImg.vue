@@ -6,7 +6,7 @@
 			<img class="xuxian" src="static/images/ceshi/xuxian.png">
 		</div>
 		<div class="imgbox" v-if="imginfo && imginfo.type == 'shoes'">
-			<img :src="imginfo.screenin">
+			<img :src="baseUrlShoes + imginfo.screenin">
 		</div>
 	</div>
 </template>
@@ -16,6 +16,7 @@
 		props:['imginfo','left'],
 		data() {
 			return {
+				baseUrlShoes: '/baseUrlShoes'
 			}
 		}
 	}
@@ -34,6 +35,7 @@
 	-ms-transform: translate(0, -50%);
 	-o-transform: translate(0, -50%);
 	transform: translate(0, -50%);
+	background-color: #fff;
 }
 
 .imgbox{
