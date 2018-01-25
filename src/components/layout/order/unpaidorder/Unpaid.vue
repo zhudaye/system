@@ -1,33 +1,31 @@
 <template>
-	<div class="waitpushorder">
+	<div class="unpaid">
     <Modal
       width="400"
       :scrollable = "true"
-      v-model="chooseFactory"
-      title="选择推送工厂"
+      v-model="inputPushText"
+      title="站内推送"
       ok-text="确定"
       cancel-text="取消"
       @on-ok="ok"
       @on-cancel="cancel"
       class-name="vertical-center-modal">
-      <CheckboxGroup v-model="selectFactory" v-if="factoryList && factoryList.length > 0">
-        <Checkbox v-for="(factory, factoryIndex) in factoryList" :key="factoryIndex" :label="JSON.stringify(factory)">{{factory.title}}</Checkbox>
-      </CheckboxGroup>
+        <Input v-model="pushContent" type="textarea" :rows="4" placeholder="请输入推送内容" :autosize="{minRows: 3,maxRows: 5}"></Input>
     </Modal>
-    <div  v-if="orderList && orderList.length > 0">
+    <div v-if="orderList && orderList.length > 0">
 	    <div class="one-order" v-for="(item, index) in orderList" :key="index">
 	    	<Row class="one-order-header">
-	    		<Col span="20" class="order-header-info"> 
-		        <span>用户完成支付时间：{{item.paytime | timeToSecond}}</span>
+	    		<Col span="16" class="order-header-info"> 
+		        <span>用户创建订单时间：{{item.payTime | timeToSecond}}</span>
 		        <span> 订单号：{{item.ordersn}}</span>
 		        <span>账户ID：{{item.idnumber}}</span>
 	          <span>账户名：{{item.nickname}}</span>
 		      </Col>
-		      <Col span="4" class="one-order-header-right"> 
-			      {{'未推送'}}
+		      <Col span="8" class="one-order-header-right" style="text-align: right" v-if="item.pushContent"> 
+			      已推送短信：{{item.payTime | timeToSecond}}
 			    </Col>
 	    	</Row>
-	    	<Row class="one-order-body" v-if="item.goods">
+	    	<Row class="one-order-body">
 		      <Col span="12" class="one-order-body-left">
 		        <Row> 
 		        	<Col span="24" v-for="(oneGoods, indexGoods) in item.goods" class="left-height" :key="indexGoods">
@@ -37,7 +35,7 @@
 						      	<Col span="5" class="one-goods-content-img">
 						      	  <p class="title">正面缩略图</p>
 						      	  <div class="img-box">
-						      	  	<img src="/static/images/ceshi/aa.jpg" class="hidden">
+						      	  	<img src="/static/images/shoes/aa.jpg" class="hidden">
 						      	  	<div class="img-box-inner" v-if="oneGoods.frontthumb" @mouseenter="imgMouseEnter({type: item.ordertype,smallImg: oneGoods.frontthumb, bigImg: oneGoods.fthumb_gc}, $event)" @mouseleave="imgMouseLeave" @mousemove="imgMouseMove($event)">
 							      	  	<img :src="baseUrlCloth + oneGoods.fthumb_gc">
 							      	  	<img :src="baseUrlCloth + oneGoods.frontthumb" class="small-img">
@@ -50,7 +48,7 @@
 						        <Col span="5" class="one-goods-content-img">
 						          <p class="title">背面缩略图</p>
 						          <div class="img-box">
-						          	<img src="/static/images/ceshi/aa.jpg" class="hidden">
+						          	<img src="/static/images/shoes/aa.jpg" class="hidden">
 						      	    <div class="img-box-inner" v-if="oneGoods.backthumb" @mouseenter="imgMouseEnter({type: item.ordertype,smallImg: oneGoods.backthumb, bigImg: oneGoods.bthumb_gc}, $event)" @mouseleave="imgMouseLeave" @mousemove="imgMouseMove($event)">
 							      	  	<img :src="baseUrlCloth + oneGoods.bthumb_gc">
 							      	  	<img :src="baseUrlCloth + oneGoods.backthumb" class="small-img">
@@ -175,8 +173,7 @@
 		          </Col>
 		          <Col span="5" class="tbcenterbox textCenter">
 		            <div class="tbcenter padding15">
-			        	  <p>{{item.pay_type == 1 ? '支付宝' : '微信'}}</p>
-			        	  <p>{{item.totalmoney}}元</p>
+			        	  <p>未支付</p>
 			        	</div>
 		          </Col>
 		          <Col span="3" class="tbcenterbox textCenter ">
@@ -185,8 +182,9 @@
 			        	</div>
 		          </Col>
 		          <Col span="8" class="tbcenterbox textCenter">
-		            <div class="tbcenter">
-			        	  <Button type="warning" @click="push(item, index)">立即推送</Button>
+		            <div class="tbcenter" :class=" item.pushContent ? 'padding15' : ''">
+		              <p v-if="item.pushContent">推送内容：{{item.pushContent}}</p>
+			        	  <Button v-else type="warning" @click="push(item, index)">站内推送</Button>
 			        	</div>
 		          </Col>
 		        </Row>
@@ -194,12 +192,12 @@
 		    </Row>
 	    </div>
 	  </div>
-    <Row v-else class="bottomAll">
-    	<Col span="24" style="font-size: 14px;text-align: center; padding: 10px;">
-    	  暂无数据
-      </Col>
+	  <Row v-else class="bottomAll">
+	  	<Col span="24" style="font-size: 14px;text-align: center; padding: 10px;">
+	  	  暂无数据
+	    </Col>
     </Row>
-    <Row  class="bottomAll" type="flex" align="middle" style="margin-top: 5px;padding: 10px" v-if="orderList && orderList.length > 0">
+    <Row class="bottomAll" type="flex" align="middle" style="margin-top: 5px;padding: 10px" v-show="orderList && orderList.length > 0">
     	<Col span="4">
     	  <Checkbox v-model="allSelect" @on-change="selectAll">全选</Checkbox>    	  
       </Col>
@@ -221,23 +219,24 @@ import ShowBigImg from '../orderpublic/ShowBigImg'
 import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 import myjs from '@/assets/myjs/myjs.js'
 	export default {
-		name: 'waitpushporder',
+		name: 'unpaidorder',
+		props:['searchapi', 'contentapi', 'userinfo', 'searchcontent'],
 		data() {
 			return {
 				baseUrlShoes: config.imgurl1,
 				baseUrlCloth: config.imgurl1,
-				selectFactory: [],//推送的工厂列表
+				pushContent: '',
 				upLoadList:[],//推送的订单列表
 				upLoadOneIndex: -1,
 				allSelect: false,//是否全选
         imgObj: null,//生成图片信息
         imginfo: null, //放大图片信息
         ShowBigImgLeft: 0,//放大图片left
-        chooseFactory: false,//是否弹出工厂选择层
+        inputPushText: false,//是否弹出推送内容输入层
         totalNumber: 0,//订单总数
         currentPage: 1,//当前页
-        factoryList: null,
-        orderList: null
+        orderList: null,
+        unpushList: []
 			}
 		},
 		components:{
@@ -252,18 +251,15 @@ import myjs from '@/assets/myjs/myjs.js'
             content: 'Loading...',
             duration: 0
 	        });
-          this.getData(config.api + apiconfig.orderList,{page: 1, pagesize: 10, querytime: this.passvalue, status: 2, pushstatus: 0}).then((value) => {
+          this.getData(config.api + apiconfig.orderList,{page: 1, pagesize: 10, querytime: this.passvalue, status: 1}).then((value) => {
           	loading();
 						if(value.code == 200) {
-							this.orderList = null;
-							if(value.data.length > 0) {
-                for(let ele of value.data) {
-			      			ele.isIn = false;
-			      		}
-								this.orderList = value.data;
-							  this.totalNumber = value.total;//订单总数
-			          this.currentPage = value.page;
-							}
+							for(let ele of value.data) {
+		      			ele.isIn = false;
+		      		}
+							this.orderList = value.data;
+						  this.totalNumber = value.total;//订单总数
+		          this.currentPage = value.page;
 						}else{
 							this.$Message.info(value.msg);
 						}
@@ -275,20 +271,20 @@ import myjs from '@/assets/myjs/myjs.js'
 			}
 		},
 		methods: {
-			getData( url,option) {
-        return new Promise((resove, reject) => {
-          this.$http({
-	          method:'POST',
-	          url: url,
-	          data: option,
-	          responseType:'json'
-	        }).then(function(response) {
-	          resove(response.data);
-	        }).catch(function(e){
-	          reject(e);
-	        });
-        })
-      },
+			getDataPage() {
+	      this.getData(config.api + apiconfig.orderList,{page: this.currentPage, pagesize: 10, status: 1}).then((value) => {
+					if(value.code == 200) {
+						this.orderList = value.data.map((ele) => {
+							ele.isIn = false;
+							return ele
+						});
+					  this.totalNumber = value.total;//订单总数
+	          this.currentPage = value.page;
+					}else{
+						this.$Message.info(value.msg);
+					}
+				})
+			},
       loadImg(url) {
         myjs.loadImg(url).then(function(value) {
         	if(value) {
@@ -307,7 +303,7 @@ import myjs from '@/assets/myjs/myjs.js'
         for(let i = 0; i <list.length; i++) {
           if(list[i].type == 'shoes') {
             for (let j = 0; j < list[i].goods.length; j++) {
-            	if(!(list[i].goods[j].leftimg && list[i].goods[j].rightimg && list[i].goods[j].aboutimg)) {
+            	if(!(list[i].goods[j].leftshoe && list[i].goods[j].rightshoe && list[i].goods[j].allshoe)) {
             		return false;
             	}
             }
@@ -316,8 +312,6 @@ import myjs from '@/assets/myjs/myjs.js'
         return true;
 			},
 			batchOperation() {
-				this.$Message.warning('预留功能,尚未开发');
-        return
 				let selectList = this.orderList.filter((ele) => {
 					return ele.isIn
 				})
@@ -338,10 +332,11 @@ import myjs from '@/assets/myjs/myjs.js'
             duration: 2
           });
         	return;
-				}*/
-        this.showAlert(selectList);
+				}
+*/
+        this.showFactory(selectList);
 			},
-			push(item, index) {//推送单个订单
+			push(item, index) {
 				/*if(!this.checkGenerateImg([item])){
           this.$Notice.error({
             title: '错误提醒',
@@ -350,61 +345,38 @@ import myjs from '@/assets/myjs/myjs.js'
           });
         	return;
 				}*/
-				this.upLoadOneIndex = index;//记录推送订单的index
-        this.showAlert([item]);
+				this.upLoadOneIndex = index;
+        this.showFactory([item]);
 			},
-			showAlert(upList) {//弹出工厂选择框
-				this.chooseFactory = true;
-				this.selectFactory = [];//清空工厂选择
-				this.upLoadList = JSON.parse(JSON.stringify(upList));//缓存即将推送的订单
-			},
-			pushOrder(url, option) {//上传推送订单
-        return new Promise((resove, reject) => {
-          this.$http({
-	          method:'POST',
-	          url: url,
-	          data: option,
-	          responseType:'json'
-	        }).then(function(response) {
-	          resove(response.data);
-	        }).catch(function(e){
-	          reject(e);
-	        });
-        })
+			showFactory(upList) {
+				this.inputPushText = true;
+				this.pushContent = '';
+				this.upLoadList = JSON.parse(JSON.stringify(upList));
 			},
 			ok() {
-				let _this = this;
-        if(this.selectFactory.length <= 0) {
+        if(formatText(this.pushContent).length <= 0) {
         	this.$Notice.error({
             title: '错误提醒',
-            desc: '未选择推送工厂',
+            desc: '请输入推送内容!',
             duration: 2
           });
         	return
         }
-        let option = {
-        	orderid: this.upLoadList[0].orderid, 
-        	factoryid: JSON.parse(this.selectFactory[0]).factoryid
+        if(this.upLoadOneIndex == -1) {
+        	this.orderList = this.orderList.filter((ele) => {
+        		return !ele.isIn
+        	})
+        }else{
+        	this.orderList[this.upLoadOneIndex].pushContent = this.pushContent;
+        	this.unpushList.splice(this.unpushList.indexOf(this.upLoadOneIndex), 1);        
         }
-        this.pushOrder(config.api + apiconfig.pushOrder,option).then((value) => {//上传推送订单
-        	if(value.code == 200) {
-            if(this.upLoadOneIndex == -1) {
-		        	this.orderList = this.orderList.filter((ele) => {
-		        		return !ele.isIn
-		        	})
-		        }else{
-		        	this.orderList.splice(this.upLoadOneIndex, 1);
-		        	this.upLoadOneIndex = -1;
-		        }
-		        this.upLoadList = [];
-		        this.selectFactory = [];
-        	}else{
-        		this.$Message.info(value.msg);
-        	}
-        })
+        this.checkAllSelect();
+        console.log(this.unpushList);
+        this.upLoadOneIndex = -1;
+        this.upLoadList = [];
       },
       cancel() {
-      	this.selectFactory = [];
+      	this.pushContent = '';
       },
 			saveImg(type, index, item) {
 				if(type == 'left') {
@@ -416,21 +388,20 @@ import myjs from '@/assets/myjs/myjs.js'
 				if(type == 'all') {
 					saveAs(item.goods[index].aboutimg, item.ordersn + '左右脚' +  item.goods[index].shoes_size + '.jpeg');
 				}
-			},			
+			},
 			selectAll() {
-        this.orderList = this.orderList.map((ele) => {
-					ele.isIn = this.allSelect;
-					return ele
+        this.unpushList.map((ele) => {
+					this.orderList[ele].isIn = this.allSelect;
 				})    
 			},
 			checkAllSelect() {
-				if(this.orderList.length <= 0) {
+				if(this.unpushList.length <= 0) {
 					this.allSelect = false
 					return 
 				}
 
-        for(let i = 0; i < this.orderList.length; i++) {
-        	if(!this.orderList[i].isIn){
+        for(let i = 0; i < this.unpushList.length; i++) {
+        	if(!this.orderList[this.unpushList[i]].isIn){
         		this.allSelect = false
         		return 
         	}
@@ -455,56 +426,45 @@ import myjs from '@/assets/myjs/myjs.js'
 			imgMouseMove(event){
         this.ShowBigImgLeft = event.clientX;
 			},
-			getDataPage() {
-	      this.getData(config.api + apiconfig.orderList,{page: this.currentPage, pagesize: 10, status: 2, pushstatus: 0}).then((value) => {
-					if(value.code == 200) {
-						this.orderList = null;
-						if(value.data.length > 0) {
-              for(let ele of value.data) {
-		      			ele.isIn = false;
-		      		}
-							this.orderList = value.data;
-						  this.totalNumber = value.total;//订单总数
-		          this.currentPage = value.page;
-						}
-					}else{
-						this.$Message.info(value.msg);
-					}
-				})
-			}
-		},
-		activated() {
-			this.getData(config.api + apiconfig.orderList,{page: 1, pagesize: 10, status: 2, pushstatus: 0}).then((value) => {
-				if(value.code == 200) {
-					this.orderList = null;
-					if(value.data.length > 0) {
-            for(let ele of value.data) {
-	      			ele.isIn = false;
-	      		}
-						this.orderList = value.data;
-					  this.totalNumber = value.total;//订单总数
-	          this.currentPage = value.page;
-					}
-				}else{
-					this.$Message.info(value.msg);
-				}
-			})
-
-			this.getData(config.api + apiconfig.factoryList, {}).then((value) => {
-				if(value.code == 200) {
-					this.factoryList = value.data.map((ele) => {
-						ele.isIn = false;
-						return ele
-					});
-				}else{
-					this.$Message.info(value.msg);
-				}
-			})
+		  getData( url,option) {
+        return new Promise((resove, reject) => {
+          this.$http({
+	          method:'POST',
+	          url: url,
+	          data: option,
+	          responseType:'json'
+	        }).then(function(response) {
+	          resove(response.data);
+	        }).catch(function(e){
+	          reject(e);
+	        });
+        })
+      },
 		},
 		mounted() {
+      this.getData(config.api + apiconfig.orderList,{page: 1, pagesize: 10, status: 1}).then((value) => {
+      	console.log(value);
+				if(value.code == 200) {
+					this.orderList = value.data;
+				  this.totalNumber = value.total;//订单总数
+          this.currentPage = value.page;
+				}else{
+					this.$Message.info(value.msg);
+				}
+			})
 		}
+	}
+
+	function formatText(string) {    
+		//去掉所有的换行符
+		string = string.replace(/\r\n/g,"")
+		string = string.replace(/\n/g,"");
+		 
+		//去掉所有的空格（中文空格、英文空格都会被替换）
+		string = string.replace(/\s/g,"");
+		return string;
 	}
 </script>
 <style scoped>
-  @import url('../order.css');
+  @import url('../order.css')
 </style>

@@ -1,22 +1,24 @@
 <template>
 	<div class="showBigImg" :style="{left: left + 200 + 'px'}" v-show="imginfo">
-		<div class="imgbox" v-if="imginfo && imginfo.type == 'clothes'">
-			<img :src="imginfo.bigImg">
-			<img :src="imginfo.smallImg" class="smallimg">
-			<img class="xuxian" src="static/images/ceshi/xuxian.png">
+		<div class="imgbox" v-if="imginfo && imginfo.type == 1">
+			<img :src="baseUrlCloth + imginfo.bigImg">
+			<img :src="baseUrlCloth + imginfo.smallImg" class="smallimg">
+			<img class="xuxian" src="/static/images/shoes/xuxian.png">
 		</div>
-		<div class="imgbox" v-if="imginfo && imginfo.type == 'shoes'">
+		<div class="imgbox" v-if="imginfo && imginfo.type == 2">
 			<img :src="baseUrlShoes + imginfo.screenin">
 		</div>
 	</div>
 </template>
 <script>
+import config from '@/assets/myconfig/url.config.js'
 	export default {
 		name: 'showBigImg',
 		props:['imginfo','left'],
 		data() {
 			return {
-				baseUrlShoes: '/baseUrlShoes'
+				baseUrlShoes: config.imgurl1,
+				baseUrlCloth: config.imgurl1
 			}
 		}
 	}
@@ -43,6 +45,7 @@
 }
 
 .imgbox>img{
+	max-width: 600px;
 	display: block;
 }
 

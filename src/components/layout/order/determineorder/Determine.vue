@@ -1,5 +1,5 @@
 <template>
-	<div class="pushedorder">
+	<div class="determineorder">
     <div v-if="orderList && orderList.length > 0">
       <div class="one-order" v-for="(item, index) in orderList" :key="index">
       	<Row class="one-order-header">
@@ -154,7 +154,7 @@
   	        	  <div class="tbcenter padding15">
   		        	  <p>姓名：{{item.name}}</p>
                   <p>电话：{{item.tel}}</p>
-                  <p>地址：{{item.province + ' ' + item.city + ' ' + item.area + ' ' + item.detail}}</p>			        	
+                  <p>地址：{{item.province + ' ' + item.city + ' ' + item.area + ' ' + item.detail}}</p>
   		        	</div>
   	          </Col>
   	          <Col span="5" class="tbcenterbox textCenter">
@@ -163,15 +163,17 @@
   			        	<p>{{item.totalmoney}}元</p>
   		        	</div>
   	          </Col>
-  	          <Col span="3" class="tbcenterbox textCenter ">
+  	          <Col span="8" class="tbcenterbox textCenter ">
   	            <div class="tbcenter padding15">
-  		        	   {{item.extitle}}
+  		        	  <p>工厂名称：{{item.factory}}</p>
+  		        	  <p>物流名称：{{item.extitle}}</p>
+  		        	  <p>快递单号：{{item.excode}}</p>
+  		        	  <p>工厂响应时间：{{item.delivertime | timeToSecond}}</p>
   		        	</div>
   	          </Col>
-  	          <Col span="8" class="tbcenterbox textCenter">
+  	          <Col span="3" class="tbcenterbox textCenter">
   	            <div class="tbcenter padding15">
-  		        	  <p>{{item.factory}}</p>
-  		        	  <p>等待工厂回传信息</p>
+  		        	  <p>已确定</p>
   		        	</div>
   	          </Col>
   	        </Row>
@@ -184,7 +186,7 @@
         暂无数据
       </Col>
     </Row>
-    <Row  class="bottomAll" type="flex" align="middle" style="margin-top: 5px;padding: 10px" v-if="orderList && orderList.length > 0">
+    <Row  class="bottomAll" type="flex" align="middle" style="margin-top: 5px;padding: 10px" v-show="orderList && orderList.length > 0">
       <Col span="24">
         <Page :current="currentPage" :total="totalNumber" style="text-align: center" @on-change="getDataPage"></Page>
       </Col>
@@ -200,13 +202,11 @@ import ShowBigImg from '../orderpublic/ShowBigImg'
 import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 import myjs from '@/assets/myjs/myjs.js'
 	export default {
-		name: 'pushedorder',
+		name: 'determineorder',
 		data() {
 			return {
 				baseUrlShoes: config.imgurl1,
 				baseUrlCloth: config.imgurl1,
-				selectFactory: [],//推送的工厂列表
-				upLoadOrder:[],//推送的订单列表
         imgObj: null,//生成图片信息
         imginfo: null, //放大图片信息
         ShowBigImgLeft: 0,//放大图片left
@@ -227,15 +227,16 @@ import myjs from '@/assets/myjs/myjs.js'
             content: 'Loading...',
             duration: 0
           });
-          this.getData(config.api + apiconfig.orderList,{page: 1, pagesize: 10, querytime: this.passvalue,status: 2, pushstatus: 1}).then((value) => {
+          this.getData(config.api + apiconfig.confirmOrderlist,{page: 1, pagesize: 10, querytime: this.passvalue}).then((value) => {
             loading();
             if(value.code == 200) {
-              this.orderList = null;
-              if(value.data.length > 0) {
-                this.orderList = value.data;
-                this.totalNumber = value.total;//订单总数
-                this.currentPage = value.page;
+              console.log(value)
+              for(let ele of value.data) {
+                ele.isIn = false;
               }
+              this.orderList = value.data;
+              this.totalNumber = value.total;//订单总数
+              this.currentPage = value.page;
             }else{
               this.$Message.info(value.msg);
             }
@@ -244,15 +245,15 @@ import myjs from '@/assets/myjs/myjs.js'
       }
     },
 		methods: {
-			getDataPage() {
-        this.getData(config.api + apiconfig.orderList,{page: this.currentPage, pagesize: 10, status: 2, pushstatus: 1}).then((value) => {
+      getDataPage() {
+        this.getData(config.api + apiconfig.waitSend_notPush,{page: this.currentPage, pagesize: 10}).then((value) => {
           if(value.code == 200) {
-            this.orderList = null;
-            if(value.data.length > 0) {
-              this.orderList = value.data;
-              this.totalNumber = value.total;//订单总数
-              this.currentPage = value.page;
-            }
+            this.orderList = value.data.map((ele) => {
+              ele.isIn = false;
+              return ele
+            });
+            this.totalNumber = value.total;//订单总数
+            this.currentPage = value.page;
           }else{
             this.$Message.info(value.msg);
           }
@@ -300,7 +301,7 @@ import myjs from '@/assets/myjs/myjs.js'
 			imgMouseMove(event){
         this.ShowBigImgLeft = event.clientX;
 			},
-			getData( url,option) {
+		  getData( url,option) {
         return new Promise((resove, reject) => {
           this.$http({
 	          method:'POST',
@@ -315,15 +316,13 @@ import myjs from '@/assets/myjs/myjs.js'
         })
       },
 		},
-		activated() {
-      this.getData(config.api + apiconfig.orderList,{page: 1, pagesize: 10,status: 2, pushstatus: 1}).then((value) => {
+		mounted() {
+      this.getData(config.api + apiconfig.confirmOrderlist,{page: 1, pagesize: 10}).then((value) => {
       	console.log(value);
 				if(value.code == 200) {
-					if(value.data.length > 0) {
-            this.orderList = value.data;
-            this.totalNumber = value.total;//订单总数
-            this.currentPage = value.page;
-          }
+					this.orderList = value.data;
+				  this.totalNumber = value.total;//订单总数
+          this.currentPage = value.page;
 				}else{
 					this.$Message.info(value.msg);
 				}

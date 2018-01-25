@@ -4,12 +4,17 @@
 			<div class="top-header-inner">
 				<Row class="top-nav">
 		      <Col span="12" class="top-left"> 
-			      <Button :type="isPushed ? 'default' : 'success'" @click="changePush(false)">未推送</Button> 
-			      <Button :type="isPushed ? 'success' : 'default'" @click="changePush(true)">已推送</Button>
+		        <Menu mode="horizontal" theme="light" :active-name="pushed == 'yes' ? 'yes' : 'no'"  @on-select="changePush">
+		          <MenuItem name="no">
+                未推送
+              </MenuItem>
+              <MenuItem name="yes">
+                已推送
+              </MenuItem>
+            </Menu>
 			    </Col>
 		      <Col span="12" class="top-right">
-		        <Input v-model="search" placeholder="按时间查询" style="width: 300px">
-		        </Input>
+		        <DatePicker v-model="search" type="date" placeholder="按时间查询" style="width: 200px"></DatePicker>
 		        <Button type="primary" @click="submit">搜索</Button>
 		      </Col>
 		    </Row>
@@ -36,7 +41,7 @@
 		    </Row>
 		  </div>
 	  </div>
-    <component :is="currentComponent" class="main-content"></component>
+    <keep-alive><component :is="pushed == 'yes' ? 'my-pushedorder' : 'my-waitpushorder'" class="main-content" :passvalue="passvalue"></component></keep-alive>
 	</div>
 </template>
 <script>
@@ -48,68 +53,41 @@
 			'my-waitpushorder': WaitPushOrder,
 			'my-pushedorder': PushedOrder
 		},
+		computed: {
+			pushed () {
+				return this.$store.state.order.isPushed
+			}
+		},
 		data() {
 			return {
         search: '',//搜索内容
-        isPushed: false,
-        currentComponent: 'my-waitpushorder'
+        passvalue:''
 			}
 		},
-		watch: {
-      isPushed() {
-        this.currentComponent = this.isPushed ? 'my-pushedorder' : 'my-waitpushorder'
-      }
+		mounted(){
 		},
     methods: {
       changePush(status) {
-				if(this.isPushed == status) return;
-				this.isPushed = status
+      	this.search = '';
+				this.$store.commit('changeIsPush', status);
 			},
 			submit() {
-				
+				if(this.search == '' || this.passvalue == new Date(this.search).Format("yyyy-MM-dd")) {
+					return
+				}
+				this.passvalue = new Date(this.search).Format("yyyy-MM-dd");
 			}
     }
 	}
 </script>
-<style>
-  .top-header{
-    position: fixed;
-    left: 0;
-    top: 60px;
-    width: 100%;
-    padding-left: 207px;
-    padding-right: 7px;
-    z-index: 998;
+<style scoped>
+  @import url('../order.css');
+  .top-left .ivu-menu-horizontal{
+  	height: 32px;
+  	line-height: 32px;
   }
 
-  .top-header .top-header-inner{
-  	width: 100%;
-  	padding-top: 5px;
-  	 background-color: #f5f7f9;
-  }
-
-  .top-header .top-header-inner>div{
-  	background-color: #fff;
-  	box-shadow: 0 1px 1px rgba(0,0,0,.1);
-  }
-
-  .top-header .top-header-inner>div:not(:first-child){
-  	margin-top: 5px;
-  }
-
-  .main-content{
-  	margin-top: 167px;
-  }
-
-	.top-nav {
-		padding: 10px 15px;
-	}
-
-  .top-nav .top-right{
-  	text-align: right;
-  }
-
-  .table-title{
-  
+  .top-left .ivu-menu-horizontal:after{
+  	width: 0;
   }
 </style>

@@ -1,38 +1,36 @@
 <template>
-	<div class="waitpushorder">
+	<div class="waitreceive">
     <Modal
       width="400"
       :scrollable = "true"
-      v-model="chooseFactory"
-      title="选择推送工厂"
-      ok-text="确定"
+      v-model="sureOrder"
+      title="确认订单"
+      ok-text="确认"
       cancel-text="取消"
       @on-ok="ok"
       @on-cancel="cancel"
       class-name="vertical-center-modal">
-      <CheckboxGroup v-model="selectFactory" v-if="factoryList && factoryList.length > 0">
-        <Checkbox v-for="(factory, factoryIndex) in factoryList" :key="factoryIndex" :label="JSON.stringify(factory)">{{factory.title}}</Checkbox>
-      </CheckboxGroup>
+      <div>是否确认订单?</div>
     </Modal>
-    <div  v-if="orderList && orderList.length > 0">
+    <div v-if="orderList && orderList.length > 0">
 	    <div class="one-order" v-for="(item, index) in orderList" :key="index">
 	    	<Row class="one-order-header">
-	    		<Col span="20" class="order-header-info"> 
+	    		<Col span="16" class="order-header-info"> 
 		        <span>用户完成支付时间：{{item.paytime | timeToSecond}}</span>
 		        <span> 订单号：{{item.ordersn}}</span>
 		        <span>账户ID：{{item.idnumber}}</span>
 	          <span>账户名：{{item.nickname}}</span>
 		      </Col>
-		      <Col span="4" class="one-order-header-right"> 
-			      {{'未推送'}}
+		      <Col span="8" class="one-order-header-right" style="text-align: right"> 
+			      订单推送时间：{{item.push_time | timeToSecond}}
 			    </Col>
 	    	</Row>
-	    	<Row class="one-order-body" v-if="item.goods">
+	    	<Row class="one-order-body">
 		      <Col span="12" class="one-order-body-left">
 		        <Row> 
 		        	<Col span="24" v-for="(oneGoods, indexGoods) in item.goods" class="left-height" :key="indexGoods">
 		        	  <div class="one-goods" v-if="item.ordertype == 1">
-						      <Checkbox v-model="item.isIn" class="check-box" v-if="indexGoods == 0" @on-change="checkAllSelect"></Checkbox>
+		        	  	<Checkbox v-model="item.isIn" class="check-box" v-if="indexGoods == 0" @on-change="checkAllSelect"></Checkbox>
 						      <Row class="one-goods-content" type="flex" align="middle">
 						      	<Col span="5" class="one-goods-content-img">
 						      	  <p class="title">正面缩略图</p>
@@ -86,7 +84,6 @@
 						      </Row>
 						    </div>
 						    <div class="one-goods" v-if="item.ordertype == 2">
-						      <Checkbox v-if="indexGoods == 0" v-model="item.isIn" class="check-box" @on-change="checkAllSelect"></Checkbox>
 							    <Row class="one-goods-content">
 							    	<Col span="24">
 								      <Row>
@@ -176,17 +173,20 @@
 		          <Col span="5" class="tbcenterbox textCenter">
 		            <div class="tbcenter padding15">
 			        	  <p>{{item.pay_type == 1 ? '支付宝' : '微信'}}</p>
-			        	  <p>{{item.totalmoney}}元</p>
+				        	<p>{{item.totalmoney}}元</p>
 			        	</div>
 		          </Col>
-		          <Col span="3" class="tbcenterbox textCenter ">
+		          <Col span="8" class="tbcenterbox textCenter ">
 		            <div class="tbcenter padding15">
-			        	  {{item.extitle}}
+			        	  <p>工厂名称：{{item.factory}}</p>
+			        	  <p>物流名称：{{item.extitle}}</p>
+			        	  <p>快递单号：{{item.excode}}</p>
+			        	  <p>工厂响应时间：{{item.delivertime | timeToSecond}}</p>
 			        	</div>
 		          </Col>
-		          <Col span="8" class="tbcenterbox textCenter">
+		          <Col span="3" class="tbcenterbox textCenter">
 		            <div class="tbcenter">
-			        	  <Button type="warning" @click="push(item, index)">立即推送</Button>
+			        	  <Button type="warning" @click="push(item, index)">确认订单</Button>
 			        	</div>
 		          </Col>
 		        </Row>
@@ -194,12 +194,12 @@
 		    </Row>
 	    </div>
 	  </div>
-    <Row v-else class="bottomAll">
+	  <Row v-else class="bottomAll">
     	<Col span="24" style="font-size: 14px;text-align: center; padding: 10px;">
     	  暂无数据
       </Col>
     </Row>
-    <Row  class="bottomAll" type="flex" align="middle" style="margin-top: 5px;padding: 10px" v-if="orderList && orderList.length > 0">
+    <Row  class="bottomAll" type="flex" align="middle" style="margin-top: 5px;padding: 10px" v-show="orderList && orderList.length > 0">
     	<Col span="4">
     	  <Checkbox v-model="allSelect" @on-change="selectAll">全选</Checkbox>    	  
       </Col>
@@ -221,22 +221,21 @@ import ShowBigImg from '../orderpublic/ShowBigImg'
 import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 import myjs from '@/assets/myjs/myjs.js'
 	export default {
-		name: 'waitpushporder',
+		name: 'waitreceiveorder',
+		props:['passvalue'],
 		data() {
 			return {
 				baseUrlShoes: config.imgurl1,
 				baseUrlCloth: config.imgurl1,
-				selectFactory: [],//推送的工厂列表
-				upLoadList:[],//推送的订单列表
+				upLoadList:[],//确认的订单列表
 				upLoadOneIndex: -1,
 				allSelect: false,//是否全选
         imgObj: null,//生成图片信息
         imginfo: null, //放大图片信息
         ShowBigImgLeft: 0,//放大图片left
-        chooseFactory: false,//是否弹出工厂选择层
+        sureOrder: false,//是否弹出工厂选择层
         totalNumber: 0,//订单总数
         currentPage: 1,//当前页
-        factoryList: null,
         orderList: null
 			}
 		},
@@ -244,51 +243,51 @@ import myjs from '@/assets/myjs/myjs.js'
 			'my-showbigimg': ShowBigImg,
 			'my-generatepicture': GeneratePicture
 		},
-		props:['passvalue'],
 		watch: {
+			orderList() { 
+			  this.checkAllSelect();                                                          	
+			},
 			passvalue() {
 				if(this.passvalue){
 					let loading = this.$Message.loading({
             content: 'Loading...',
             duration: 0
 	        });
-          this.getData(config.api + apiconfig.orderList,{page: 1, pagesize: 10, querytime: this.passvalue, status: 2, pushstatus: 0}).then((value) => {
+          this.getData(config.api + apiconfig.waitConfirm,{page: 1, pagesize: 10, querytime: this.passvalue}).then((value) => {
           	loading();
 						if(value.code == 200) {
-							this.orderList = null;
-							if(value.data.length > 0) {
-                for(let ele of value.data) {
-			      			ele.isIn = false;
-			      		}
-								this.orderList = value.data;
-							  this.totalNumber = value.total;//订单总数
-			          this.currentPage = value.page;
-							}
+							console.log(value)
+							for(let ele of value.data) {
+		      			ele.isIn = false;
+		      		}
+							this.orderList = value.data;
+						  this.totalNumber = value.total;//订单总数
+		          this.currentPage = value.page;
 						}else{
 							this.$Message.info(value.msg);
 						}
 					})
 				}
-			},
-			orderList() { 
-			  this.checkAllSelect();                                                          	
 			}
 		},
 		methods: {
-			getData( url,option) {
-        return new Promise((resove, reject) => {
-          this.$http({
-	          method:'POST',
-	          url: url,
-	          data: option,
-	          responseType:'json'
-	        }).then(function(response) {
-	          resove(response.data);
-	        }).catch(function(e){
-	          reject(e);
-	        });
-        })
-      },
+			getDataPage() {
+	      this.getData(config.api + apiconfig.waitSend_notPush,{page: this.currentPage, pagesize: 10}).then((value) => {
+					if(value.code == 200) {
+						for(let ele of value.data) {
+	      			ele.isIn = false;
+	      		}
+						this.orderList = value.data.map((ele) => {
+							ele.isIn = false;
+							return ele
+						});
+					  this.totalNumber = value.total;//订单总数
+	          this.currentPage = value.page;
+					}else{
+						this.$Message.info(value.msg);
+					}
+				})
+			},
       loadImg(url) {
         myjs.loadImg(url).then(function(value) {
         	if(value) {
@@ -307,7 +306,7 @@ import myjs from '@/assets/myjs/myjs.js'
         for(let i = 0; i <list.length; i++) {
           if(list[i].type == 'shoes') {
             for (let j = 0; j < list[i].goods.length; j++) {
-            	if(!(list[i].goods[j].leftimg && list[i].goods[j].rightimg && list[i].goods[j].aboutimg)) {
+            	if(!(list[i].goods[j].leftshoe && list[i].goods[j].rightshoe && list[i].goods[j].allshoe)) {
             		return false;
             	}
             }
@@ -316,8 +315,6 @@ import myjs from '@/assets/myjs/myjs.js'
         return true;
 			},
 			batchOperation() {
-				this.$Message.warning('预留功能,尚未开发');
-        return
 				let selectList = this.orderList.filter((ele) => {
 					return ele.isIn
 				})
@@ -330,93 +327,45 @@ import myjs from '@/assets/myjs/myjs.js'
           });
           return
 				}
-
-				/*if(!this.checkGenerateImg(selectList)){
-          this.$Notice.error({
-            title: '错误提醒',
-            desc: '订单有未生成图片',
-            duration: 2
-          });
-        	return;
-				}*/
         this.showAlert(selectList);
 			},
-			push(item, index) {//推送单个订单
-				/*if(!this.checkGenerateImg([item])){
-          this.$Notice.error({
-            title: '错误提醒',
-            desc: '订单有未生成图片',
-            duration: 2
-          });
-        	return;
-				}*/
-				this.upLoadOneIndex = index;//记录推送订单的index
+			push(item, index) {
+				this.upLoadOneIndex = index;
         this.showAlert([item]);
 			},
-			showAlert(upList) {//弹出工厂选择框
-				this.chooseFactory = true;
-				this.selectFactory = [];//清空工厂选择
-				this.upLoadList = JSON.parse(JSON.stringify(upList));//缓存即将推送的订单
-			},
-			pushOrder(url, option) {//上传推送订单
-        return new Promise((resove, reject) => {
-          this.$http({
-	          method:'POST',
-	          url: url,
-	          data: option,
-	          responseType:'json'
-	        }).then(function(response) {
-	          resove(response.data);
-	        }).catch(function(e){
-	          reject(e);
-	        });
-        })
+			showAlert(upList) {
+				this.sureOrder = true;
+				this.upLoadList = JSON.parse(JSON.stringify(upList));
 			},
 			ok() {
-				let _this = this;
-        if(this.selectFactory.length <= 0) {
-        	this.$Notice.error({
-            title: '错误提醒',
-            desc: '未选择推送工厂',
-            duration: 2
-          });
-        	return
+        console.log(this.upLoadList);
+        if(this.upLoadOneIndex == -1) {
+        	this.orderList = this.orderList.filter((ele) => {
+        		return !ele.isIn
+        	})
+        }else{
+        	this.orderList.splice(this.upLoadOneIndex, 1);
+        	this.upLoadOneIndex = -1;
         }
-        let option = {
-        	orderid: this.upLoadList[0].orderid, 
-        	factoryid: JSON.parse(this.selectFactory[0]).factoryid
-        }
-        this.pushOrder(config.api + apiconfig.pushOrder,option).then((value) => {//上传推送订单
-        	if(value.code == 200) {
-            if(this.upLoadOneIndex == -1) {
-		        	this.orderList = this.orderList.filter((ele) => {
-		        		return !ele.isIn
-		        	})
-		        }else{
-		        	this.orderList.splice(this.upLoadOneIndex, 1);
-		        	this.upLoadOneIndex = -1;
-		        }
-		        this.upLoadList = [];
-		        this.selectFactory = [];
-        	}else{
-        		this.$Message.info(value.msg);
-        	}
-        })
+        this.upLoadList = [];
       },
       cancel() {
-      	this.selectFactory = [];
       },
 			saveImg(type, index, item) {
 				if(type == 'left') {
-					saveAs(item.goods[index].leftimg, item.ordersn + '左脚' +  item.goods[index].shoes_size + '.jpeg');
+					saveAs(item.goods[index].leftshoe, item.ordernumber + '左脚.jpeg');
 				}
 				if(type == 'right') {
-					saveAs(item.goods[index].rightimg, item.ordersn + '右脚' +  item.goods[index].shoes_size + '.jpeg');
+					saveAs(item.goods[index].rightshoe, item.ordernumber + '右脚.jpeg');
 				}
 				if(type == 'all') {
-					saveAs(item.goods[index].aboutimg, item.ordersn + '左右脚' +  item.goods[index].shoes_size + '.jpeg');
+					saveAs(item.goods[index].allshoe, item.ordernumber + '左右脚.jpeg');
 				}
-			},			
+			},
+			changePush(status) {
+				if(this.isPushed == status) return;
+				this.isPushed = status
+			},
 			selectAll() {
         this.orderList = this.orderList.map((ele) => {
 					ele.isIn = this.allSelect;
@@ -455,56 +404,38 @@ import myjs from '@/assets/myjs/myjs.js'
 			imgMouseMove(event){
         this.ShowBigImgLeft = event.clientX;
 			},
-			getDataPage() {
-	      this.getData(config.api + apiconfig.orderList,{page: this.currentPage, pagesize: 10, status: 2, pushstatus: 0}).then((value) => {
-					if(value.code == 200) {
-						this.orderList = null;
-						if(value.data.length > 0) {
-              for(let ele of value.data) {
-		      			ele.isIn = false;
-		      		}
-							this.orderList = value.data;
-						  this.totalNumber = value.total;//订单总数
-		          this.currentPage = value.page;
-						}
-					}else{
-						this.$Message.info(value.msg);
-					}
-				})
-			}
-		},
-		activated() {
-			this.getData(config.api + apiconfig.orderList,{page: 1, pagesize: 10, status: 2, pushstatus: 0}).then((value) => {
-				if(value.code == 200) {
-					this.orderList = null;
-					if(value.data.length > 0) {
-            for(let ele of value.data) {
-	      			ele.isIn = false;
-	      		}
-						this.orderList = value.data;
-					  this.totalNumber = value.total;//订单总数
-	          this.currentPage = value.page;
-					}
-				}else{
-					this.$Message.info(value.msg);
-				}
-			})
-
-			this.getData(config.api + apiconfig.factoryList, {}).then((value) => {
-				if(value.code == 200) {
-					this.factoryList = value.data.map((ele) => {
-						ele.isIn = false;
-						return ele
-					});
-				}else{
-					this.$Message.info(value.msg);
-				}
-			})
+			getData( url,option) {
+        return new Promise((resove, reject) => {
+          this.$http({
+	          method:'POST',
+	          url: url,
+	          data: option,
+	          responseType:'json'
+	        }).then(function(response) {
+	          resove(response.data);
+	        }).catch(function(e){
+	          reject(e);
+	        });
+        })
+      },
 		},
 		mounted() {
+      this.getData(config.api + apiconfig.waitConfirm,{page: 1, pagesize: 10}).then((value) => {
+      	console.log(value);
+				if(value.code == 200) {
+					this.orderList = value.data.map((ele) => {
+							ele.isIn = false;
+							return ele
+						});
+				  this.totalNumber = value.total;//订单总数
+          this.currentPage = value.page;
+				}else{
+					this.$Message.info(value.msg);
+				}
+			})
 		}
 	}
 </script>
 <style scoped>
-  @import url('../order.css');
+  @import url('../order.css')
 </style>

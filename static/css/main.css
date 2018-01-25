@@ -6,6 +6,10 @@ body{
   height: 100%;
 }
 
+.table-title>div {
+  padding: 10px 0px;
+}
+
 .layout{
   border: 1px solid #d7dde4;
   background: #f5f7f9;
@@ -96,7 +100,6 @@ body{
 
 .ivu-menu-vertical .ivu-menu-item:hover{
   color: #2d8cf0;
-  background: #363e4f;
 }
 
 .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item a{
@@ -108,7 +111,6 @@ body{
 
 .ivu-menu-vertical .ivu-menu-item:hover a{
   color: #2d8cf0;
-  background: #363e4f;
 }
 
 .ivu-menu-dark.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) a{

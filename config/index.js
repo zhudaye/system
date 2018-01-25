@@ -2,7 +2,6 @@
 // Template version: 1.2.7
 // see http://vuejs-templates.github.io/webpack for documentation.
 const path = require('path')
-
 module.exports = {
   dev: {
 
@@ -10,15 +9,15 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-        '/baseUrlShoes': {
-            target: 'http://192.168.2.239/apipic.boomake.com/shoes/',
+        '/imgurl1': {
+            target: 'http://192.168.2.239/apipic.boomake.com/',
             changeOrigin: true,
             pathRewrite: {
-              '^/baseUrlShoes': ''
+              '^/imgurl1': ''
             }
         },
         '/api': {
-            target: 'http://192.168.2.239/bzadmin/public/index.php',
+            target: 'http://192.168.2.239/bzadmin/public/index.php/',
             changeOrigin: true,
             pathRewrite: {
               '^/api': ''
@@ -28,7 +27,7 @@ module.exports = {
     },
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '192.168.2.154', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
