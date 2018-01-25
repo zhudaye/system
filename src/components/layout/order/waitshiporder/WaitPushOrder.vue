@@ -420,6 +420,7 @@ import myjs from '@/assets/myjs/myjs.js'
 			selectAll() {
         this.orderList = this.orderList.map((ele) => {
 					ele.isIn = this.allSelect;
+					alert(ele.isIn);
 					return ele
 				})    
 			},

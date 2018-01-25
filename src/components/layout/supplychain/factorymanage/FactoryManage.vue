@@ -1,49 +1,41 @@
 <template>
     <div>
         <Row class="postiFix">
-        <Col span="5">
-        <button class="button" @click="onTab(index)" v-for="(tabs,index) in tabButton"  :class="{bactive: showTab == index}" style="margin-right:10px">
-            <span style="float:right;font-weight:500">/</span>{{tabs}}</button>
+        <Col span="24">
+        <h1>工厂管理信息</h1>
             </Col>
-            <Col span="3">
-            <Button type="primary" size="default" @click="method5('tableExcel')">
-                <Icon type="ios-download-outline"></Icon>
-                导出excel表
-            </Button>
-            </Col>
-            <Col span="8" style="text-align: center;">
-            <Input placeholder="请输入要查询的商户昵称和UID" style="width:55%"></Input>
-            <Button type="primary">搜索</Button>
-            </Col>
-            <Col span="8" style="text-align: center;">
-            <Input placeholder="按时间查询" style="width:55%"></Input>
-            <Button type="primary">搜索</Button>
-            </Col>
+            
         </Row>
-<div v-if="showTab === 0">
+<div>
         <table id="tableExcel" width="100%" border="1" cellspacing="0" cellpadding="0" style="text-align:center">
             <tr class="title">
                 <th> <Checkbox v-model="allSelect" @on-change="selectAll"></Checkbox></th>
-                <th>用户昵称</th>
-                <th>用户ID</th>
-                <th>提现金额</th>
-                <th>支付宝信息</th>
-                <th>申请时间</th>
-                <th>状态</th>
+                <th>ID</th>
+                <th>工厂名称</th>
+                <th>登陆账号</th>
+                <th>联系人</th>
+                <th>性别</th>
+                <th>联系人手机号</th>
+                <th>添加时间</th>
+                <th>工厂平台最后登录时间</th>
+                <th>操作</th>
             </tr>
             <tr v-for="(user, index) in users" :key="user.id">
                 <td>
                   <Checkbox v-model="user.isIn" @on-change="changeAllSelect"></Checkbox>
                 </td>
-                <td>{{user.nickname}}</td>
-                <td>{{user.idnumber}}</td>
-                <td>{{user.money/100}}</td>
-                <td>{{user.alipay}}</td>
+                <td>{{user.factoryid}}</td>
+                <td>{{user.title}}</td>
+                <td>{{user.phone}}</td>
+                <td>{{user.phone}}</td>
+                <td>{{user.website}}</td>
+                <td>{{user.phone}}</td>
                 <td>{{user.inputtime}}</td>
+                <td>{{user.lastlogtime}}</td>
                 <td>
-                    <Button @click="deleteSuccse(index)" class="ivu-btn-primary ivu-btn-small">成功</Button>
-                    <Button @click="deleteFaile(index)" class="ivu-btn-error ivu-btn-small">
-                        失败
+                     <router-link class="ivu-btn ivu-btn-primary ivu-btn-small" v-bind:to="'/layout/user/management/usermanagement'">详情</router-link>
+                    <Button @click="deleteFaile(index)" class="ivu-btn-error ivu-btn-small" :id="user.id">
+                        删除
                     </Button>
                 </td>
             </tr>
@@ -57,46 +49,7 @@
             </div>
         </div>
 </div>
-<div  v-if="showTab === 1">  
-     <table id="tableExcel" width="100%" border="1" cellspacing="0" cellpadding="0" style="text-align:center">
-            <tr class="title">
-                <th>用户昵称</th>
-                <th>用户ID</th>
-                <th>提现金额</th>
-                <th>支付宝信息</th>
-                <th>申请时间</th>
-                <th>状态</th>
-            </tr>
-            <tr v-for="comment in comments">
-                <td>{{comment.id}}</td>
-                <td>{{comment.name}}</td>
-                <td>{{comment.email}}</td>
-                <td>{{comment.email}}</td>
-                <td>{{comment.email}}</td>
-                <td>  提现成功 </td>
-            </tr>
-        </table>
-        </div>
-<div  v-if="showTab === 2">
-     <table id="tableExcel" width="100%" border="1" cellspacing="0" cellpadding="0" style="text-align:center">
-            <tr class="title">
-                <th>用户昵称</th>
-                <th>用户ID</th>
-                <th>提现金额</th>
-                <th>支付宝信息</th>
-                <th>申请时间</th>
-                <th>失败原因</th>
-            </tr>
-            <tr v-for="todo in todos">
-                <td>{{todo.id}}</td>
-                <td>{{todo.userId}}</td>
-                <td>{{todo.userId}}</td>
-                <td>{{todo.userId}}</td>
-                <td>{{todo.title}}</td>
-                <td>{{todo.title}} </td>
-            </tr>
-        </table>
-</div>
+ 
     </div>
 </template>
 
@@ -158,71 +111,36 @@ export default {
         },
           //单独处理失败
        deleteFaile: function (index) {
-          let _fail = this;
-           var withdrawid=_fail.users[index].withdrawid;
-         
-         
+         let _this = this;
        this.$Modal.confirm({
         title: '请输入失败原因',
-         content: `<Input type="text" id="result" placeholder="" style="width: 300px;border:1px solid grey"></Input>`,
+         content: `<Input type="text" id="result" placeholder="" style="width: 300px"></Input>`,
         onCancel(){
 
         },
         onOk() {
-          _fail.users.splice(index, 1);
-          var desc=$("#result").val();
-          $.ajax({
-                type:"POST",
-                url:'http://192.168.2.239/bzadmin/public/index.php/withdrawFail.html',
-                data: {withdrawid:withdrawid,desc:desc},
-                dataType:"json",
-                success: function(msg){
-                     if(msg.code=='200'){
-                        return;
-                    }
-                    if(msg.code=='401'){
-                        //状态码401  未登录  跳转到登录页面
-                        login401();
-                        return;
-                    }  else {
-                        alert(msg.msg);
-                    }
-                }
-            });
+         _this.users.splice(index, 1);
+          
         }
       })
     },
     //单独处理成功
-      deleteSuccse: function (index) {
-          let _this = this;
-          var withdrawid=_this.users[index].withdrawid;
-          var j = parseInt(withdrawid);
-          this.$Modal.confirm({
+      deleteSuccse: function (event) {
+       this.$Modal.confirm({
         title: '提示',
         content: `请确认已成功转账到用户指定账号！`,
         onCancel(){
 
         },
         onOk() {
-          _this.users.splice(index, 1);
-             $.ajax({
-                type: "POST",
-                url:'http://192.168.2.239/bzadmin/public/index.php/withdrawSuccess.html',
-                data: {withdrawid:j},
-                success: function(msg){
-                    if(msg.code=='200'){
-                        return;
-                    }
-                    if(msg.code=='401'){
-                        //状态码401  未登录  跳转到登录页面
-                        login401();
-                        return;
-                    }  else {
-                        alert(msg.msg);
-                    }
-                }
-
-            });
+          // _this.data.splice(index, 1);
+          // _this.data.splice(index, 1);
+          if (event) {
+          var id = event.target.id;
+          var order=event.target;
+          //  console.log(id);
+          $(order).parent().parent().parent().remove();
+          }
         }
       })
     },
@@ -268,7 +186,7 @@ export default {
         },
     },
   created() {
-    this.$http.get("http://192.168.2.239/bzadmin/public/index.php/withdrawList.html").then((data) => {
+    this.$http.get("http://192.168.2.239/bzadmin/public/index.php/factoryList.html").then((data) => {
       // console.log(data.data);
       // console.log(JSON.stringify(data.data));
       this.users = data.data.data;
@@ -276,13 +194,7 @@ export default {
         ele.isIn = false;
         return ele;
       })
-    }),
-    this.$http.get("http://192.168.2.239/bzadmin/public/index.php/withdrawList.html").then((data) => {
-      this.comments = data.data.data;
-    }),
-      this.$http.get("http://192.168.2.239/bzadmin/public/index.php/withdrawList.html").then((data) => {
-      this.todos = data.data.data;
-    })
+    }) 
   }
 }
  

@@ -45,7 +45,7 @@
 	</div>
 </template>
 <script>
-  import WaitPushOrder from './WaitPushOrder'
+	import WaitPushOrder from './WaitPushOrder'
   import PushedOrder from './PushedOrder'
 	export default {
 		name: 'waitshiporder',

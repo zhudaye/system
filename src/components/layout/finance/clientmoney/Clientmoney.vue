@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: 'Clientmoney',
+  name: 'clientmoney',
   data() {
   	return {
   		name: 'clientintegral'
