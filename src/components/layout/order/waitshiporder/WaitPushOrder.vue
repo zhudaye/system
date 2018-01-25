@@ -9,9 +9,10 @@
       @on-ok="ok"
       @on-cancel="cancel"
       class-name="vertical-center-modal">
-      <CheckboxGroup v-model="selectFactory">
-        <Checkbox v-for="(factory, factoryIndex) in factoryList" :key="factoryIndex" :label="factory"></Checkbox>
-      </CheckboxGroup>
+        <RadioGroup v-model="selectFactory" vertical>
+        <Radio  v-for="(factory, factoryIndex) in factoryList" :key="factoryIndex" :label="factory" ></Radio></br>
+      </RadioGroup>
+			 
     </Modal>
     <Row class="table-title">
       <Col span="12"> 
@@ -375,6 +376,7 @@ import GeneratePicture from '../orderpublic/GeneratePicture.vue'
 			selectAll() {
         this.orderList = this.orderList.map((ele) => {
 					ele.isIn = this.allSelect;
+					alert(ele.isIn);
 					return ele
 				})    
 			},

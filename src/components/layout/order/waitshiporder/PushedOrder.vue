@@ -25,7 +25,7 @@
     	<Row class="one-order-header">
     		<Col span="16" class="order-header-info"> 
 	        <span>用户完成支付时间：{{item.payTime | timeToSecond}}</span>
-	        <span> 订单号：{{item.orderID}}</span>
+	        <span>订单号：{{item.orderID}}</span>
 	        <span>账户ID：{{item.userID}}</span>
           <span>账户名：{{item.userName}}</span>
 	      </Col>

@@ -1,14 +1,14 @@
 <template>
 	<div class="SupplychainIndex">
-		<div>{{name}}</div>
+    <router-view/>
 	</div>
 </template>
 <script>
 export default {
-    name: 'Marketing',
+    name: 'SupplyChainIndex',
     data() {
       return {
-        name:'SupplychainIndex'
+        name:'SupplyChainIndex'
       }
     },
     methods: {
