@@ -3,16 +3,16 @@
         <div id="login_bg" ref="can"></div>
         <form action="form"  >
           <div class="containerLogin">
-            <span  :class="{red:isUser}"><i class="iconfont icon-denglu"></i></span>
+            <span  :class="{red:isUser}"><i class="iconfont icon-userpro"></i></span>
             <input type="text"  class="user"  :class="{red:isUser}"  v-model="loginUser" placeholder="请输入用户名" autocomplete="off" spellcheck="false"> 
           </div>
           <p class="warn">{{ userP}}</p>
           <div class="containerLogin" >
-            <span :class="{red:isPassword}"><i class="iconfont icon-denglu1"></i></span>
+            <span :class="{red:isPassword}"><i class="iconfont icon-suo"></i></span>
             <input type="password"  class="password" :class="{red:isPassword}"  v-model="loginPassword" placeholder="请输入密码">
           </div>
           <p class="warn">{{ passwordP }}</p>
-          <div class="containerLogin  yzm" >
+          <div class="containerLogin  yzm">
            <input type="text" class="yzm" :class="{red:isYzm}" v-model="loginYzm"  placeholder="请输入验证码">
             <b><img :src="img" @click='imgc()' alt=""></b>
           </div>
@@ -61,14 +61,8 @@ export default {
       if( $(".yzm").focus() ){
         this.yzmP = '';
         this.isYzm = false;
-      
       } 
-      
     },
-  
-     
-    
-   
   },
   methods: {
     imgc(){
@@ -85,13 +79,10 @@ export default {
         var yzm = this.loginYzm;
 
         // alert("u"+phone+"p"+password+"y"+yzm)
-
         var data = {username:phone,password:password,verify:yzm};
         this.userP = "";
         this.passwordP="";
         this.yzmP ="";
-       
-        
              $.ajax({
               type:"POST",
               url: 'http://192.168.2.239/bzadmin/public/index.php/login.html',
@@ -106,11 +97,8 @@ export default {
                       window.sessionStorage.setItem("usertype", usertype);
 
                   }else{
-            
-                     
                         var mm = msg.msg;
                         var sm=String(mm);
-                       
                         var yo="帐";
                         var mi="密";
                         var yan="验";
@@ -130,7 +118,6 @@ export default {
                           _this.yzmP = mm; 
                          _this.isYzm=true;
                       }
-                    
                   }
               }
           });
@@ -143,7 +130,6 @@ export default {
   },
  
   mounted(){
-     
        this.img ='http://192.168.2.239/bzadmin/public/index.php/verify.html?id='+ Date.parse(new Date())/1000;
         document.onkeydown = function(e){
             if (!e) e = window.event;
@@ -156,14 +142,10 @@ export default {
 
 var container;
 var camera, scene, renderer;
-
 var particles, particle, count = 0;
-
 var mouseX = 0, mouseY = 0;
-
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
-
 
 // animate();
 
@@ -195,7 +177,6 @@ function onDocumentMouseMove( event ) {
 }
 
 function onDocumentTouchStart( event ) {
-
   if ( event.touches.length === 1 ) {
 
     event.preventDefault();
@@ -344,8 +325,7 @@ function render() {
     right: 0;
     top: 0;
     bottom: 0;
-    margin: auto;
-    margin-top: 120px;
+    margin:120px auto;
     width: 400px;
     height:300px;
     padding: 35px 35px 15px 35px;

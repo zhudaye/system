@@ -8,6 +8,7 @@ import iView from 'iview'
 import jquery from 'jquery'
 import axios from 'axios'
 import 'es6-promise/auto'
+import axiosUrl from './assets/api'
 Vue.prototype.$http=axios  
 Vue.use(iView)
 router.beforeEach((to, from, next) => {

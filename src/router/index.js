@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import Layout from '@/components/Layout'
 import Login from '@/components/Login'
 import routerconfig from './router.config.js'
+import axiosUrl from  '../assets/api' 
+
+
 Vue.use(Router)
 //现在只做了三层路由嵌套
 let rout = [{path: '',redirect: 'home'}].concat(routerconfig.map((ele) => {

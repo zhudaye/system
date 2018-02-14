@@ -26,14 +26,14 @@
         </FormItem>
         <FormItem>
             <Button type="primary" @click="handleSubmit('formValidate')">提交</Button>
-				   <router-link class="ivu-btn"  v-bind:to="'/layout/user/Management'">取消</router-link>
+			<router-link class="ivu-btn"  v-bind:to="'/layout/user/Management'">取消</router-link>
             <!-- <Button type="ghost"   @click="handleReset('formValidate')" style="margin-left: 8px">取消</Button> -->
         </FormItem>
     </Form>
 </template>
 <script>
     export default {
-		  name: 'AddUser',
+		  name: 'adduser',
         data () {
             return {
                 formValidate: {
@@ -75,7 +75,8 @@
             },
             handleReset (name) {
                 this.$refs[name].resetFields();
-            }
+            },
+            
         }
     }
 </script>
