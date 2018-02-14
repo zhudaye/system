@@ -1,0 +1,36 @@
+*{border: none}
+.mtp10{margin-top: 10px}
+#tableExcel{margin-top: 107px}
+#tableExcel tr:hover {background: #F0F8FF; }
+.mtp57{margin-top: 150px!important}
+.mtop0{margin-top: 0!important}
+.mb20{margin-bottom: 10px}
+.ptp10{padding-top: 10px}
+.notice{color:#1c2437;font-weight:500;font-size:14px;}
+.mtb10{margin-bottom: 10px}
+.floatRight{float:right;}
+.layout-content { margin-left: 10px; }
+.layout-content-main{background: #f5f7f9;}
+.postiFix{position:fixed; width:90%;padding-bottom: 2px;padding-left:20px;background: #ffffff;height: 47px;line-height: 45px;top:60px;z-index:99;border-bottom: 1px solid #ededed;}
+.postiFix2{position:fixed; width:90%;padding-bottom: 2px;padding-left:20px;background: white; line-height:40px;top:60px;z-index:99;border-bottom: 1px solid #ededed}
+.userTiltle{ width:100%;background: #f5f7f9;height: 90px;position:fixed;top:60px;z-index: 99}
+.userTiltleRi{float:right;width: 17%; height:90px;}
+.userTiltleLe{float:left;width: 83%;height: 90px;}
+.Row45{height: 45px;line-height: 45px;}
+/* 按钮样式tab */
+.button {
+   width: 70px;
+   background: white;
+   color: #495060;
+   font-weight: 600;
+   margin-right: 10px;
+ }
+ .bactive {
+   width: 70px;
+   margin-right: 10px;
+   color: #2b85e4;
+   font-weight: bolder;
+   background: white;
+   border-bottom: 2px solid #2b85e4;
+ }
+ .button:hover{color: #5cadff; border-bottom: 2px solid #2b85e4;}

@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import Layout from '@/components/Layout'
 import Login from '@/components/Login'
 import routerconfig from './router.config.js'
+import axiosUrl from  '../assets/api' 
+
+
 Vue.use(Router)
 //现在只做了三层路由嵌套
 let rout = [{path: '',redirect: 'home'}].concat(routerconfig.map((ele) => {
@@ -22,7 +25,7 @@ let rout = [{path: '',redirect: 'home'}].concat(routerconfig.map((ele) => {
         return {
           path: child.name,
           component: resolve => require(['../components' + child.fileUrl + '/' + child.component], resolve),
-          children: children2
+          children: [{path: '', redirect: children2[0].path}].concat(children2)
         }
       }else{
         return {
@@ -36,7 +39,7 @@ let rout = [{path: '',redirect: 'home'}].concat(routerconfig.map((ele) => {
     return {
       path: ele.name,
       component: resolve => require(['../components' + ele.fileUrl + '/' + ele.component], resolve),
-      children: children
+      children: [{path: '', redirect: children[0].path}].concat(children)
     }
   }else{
     return {
@@ -48,6 +51,7 @@ let rout = [{path: '',redirect: 'home'}].concat(routerconfig.map((ele) => {
 }));
 
 export default new Router({
+  /*mode: 'history',*/
   routes: [
     {
       path: '/',

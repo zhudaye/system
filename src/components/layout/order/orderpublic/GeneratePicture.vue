@@ -1,23 +1,23 @@
 <template>
 <div class="img-out" v-if="imgInfo">
   <div class="img-inner">
-    <div id="cutbox" :style="{width: imgInfo.type == 'all' ? 2 * setCanvas.width : setCanvas.width + 'px'}">
-      <div class="leftCloth" v-if="imgInfo.type != 'right'" :style="{width: setCanvas.width + 'px'}">
+    <div id="cutbox" :style="{width: imgInfo.type == 'all' ? 2 * width + 'px' : width + 'px'}">
+      <div class="leftCloth" v-if="imgInfo.type != 'right'" :style="{width: width + 'px'}">
       	<div class="topNumberTop">
       		<p class="topTitle">左前</p>
-      		<p class="numberInfo">12123efdfrrerrfrfrrr</p>
+      		<p class="numberInfo">{{'EFR-VC-A(' + shoesSize(imgInfo.item.goods[imgInfo.index].shoes_size) + ')'}}</p>
       	</div>
       	<div class="topNumberCenter">
           <p class="topTitle">左后</p>
-      		<p class="numberInfo">12123efdfrrerrfrfrrr</p>
+      		<p class="numberInfo">{{'EFR-VC-A(' + shoesSize(imgInfo.item.goods[imgInfo.index].shoes_size) + ')'}}</p>
       	</div>
       	<div class="topNumberLeft">
           <p class="topTitle">左内</p>
-      		<p class="numberInfo">12123efdfrrerrfrfrrr</p>
+      		<p class="numberInfo">{{'EFR-VC-A(' + shoesSize(imgInfo.item.goods[imgInfo.index].shoes_size) + ')'}}</p>
       	</div>
       	<div class="topNumberRight">
           <p class="topTitle">左外</p>
-      		<p class="numberInfo">12123efdfrrerrfrfrrr</p>
+      		<p class="numberInfo">{{'EFR-VC-A(' + shoesSize(imgInfo.item.goods[imgInfo.index].shoes_size) + ')'}}</p>
       	</div>
       	<div class="orderInfo">
         	<div class="orderTitle">
@@ -26,87 +26,87 @@
         	</div>
         	<div class="orderBody">
         		<div class="oneInfo">          			
-        			<p><label>订单日期：</label><span class="underline">{{imgInfo.item.ordertime}}</span></p>
+        			<p><label>订单日期：</label><span class="underline">{{imgInfo.item.paytime | timeToDay}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>订单单号：</label><span class="underline">{{imgInfo.item.ordernumber}}</span></p>
+        			<p><label>订单单号：</label><span class="underline">{{imgInfo.item.ordersn}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>平台名称：</label><span class="underline">{{imgInfo.item.platformname}}</span></p>
+        			<p><label>平台名称：</label><span class="underline">{{'爆造'}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>品牌名称：</label><span class="underline">{{imgInfo.item.brandname}}</span></p>
+        			<p><label>品牌名称：</label><span class="underline">{{'爆造'}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>货品名称：</label><span class="underline">{{imgInfo.item.goodsname}}</span></p>
+        			<p><label>货品名称：</label><span class="underline">{{'EFR-VC-A'}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>货品号码：</label><span class="underline">{{shoesSize(imgInfo.item.goods[imgInfo.index].sizeTitle)}}</span></p>
+        			<p><label>货品号码：</label><span class="underline">{{shoesSize(imgInfo.item.goods[imgInfo.index].shoes_size)}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
         			<p><label>客户名称：</label><span class="underline">{{imgInfo.item.name}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>联系电话：</label><span class="underline">{{imgInfo.item.phonenumber}}</span></p>
+        			<p><label>联系电话：</label><span class="underline">{{imgInfo.item.tel}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>物流地址：</label><span>{{imgInfo.item.address}}</span></p>
+        			<p><label>物流地址：</label><span>{{imgInfo.item.province + ' ' + imgInfo.item.city + ' ' + imgInfo.item.area + ' ' + imgInfo.item.detail}}</span></p>
         		</div>
           </div>
         </div>
         <div class="bottomLogo">
           <span class="logoTitle">后跟标信息</span>
-          <span class="logo">爆款制造</span>
+          <span class="logo" :style="{fontSize: imgInfo.item.goods[imgInfo.index].heelword.length > 4 ? '60px' : '80px', color: imgInfo.item.goods[imgInfo.index].bgcolor.hgbColor}">{{imgInfo.item.goods[imgInfo.index].heelword}}</span>
           <span class="logoSize">爆造后跟底帮15mmx33mm</span>
         </div>
-        <div class="allDesign" :style="{transform: 'scale(' + shoesScale(imgInfo.item.goods[imgInfo.index].sizeTitle) + ')'}">
+        <div class="allDesign" :style="{width: setCanvas.width + 'px'}">
       		<div class="allDesignInner">
-            <div class="topDesign">
-            	<img class="bgImg" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutfront">
-            	<img class="lineImg" src="static/images/shoes/1-1.png">
+            <div class="topDesign" :style="frontStyle()">
+              <img class="lineImg" src="/static/images/shoes/1-1.png">
+            	<img class="bgImg" v-if="imgInfo.item.goods[imgInfo.index].cutfront" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutfront">
             </div>
-            <div class="centerDesign">
-            	<img class="bgImg" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutback">
-            	<img class="lineImg" src="static/images/shoes/2-2.png">
+            <div class="centerDesign" :style="centerStyle()">
+              <img class="lineImg" src="/static/images/shoes/2-2.png">
+            	<img class="bgImg" v-if="imgInfo.item.goods[imgInfo.index].cutback" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutback">
             </div>
-            <div class="bottomBox">
-	            <div class="leftDesign">
-	            	<img class="bgImg" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutin">
-	            	<img class="lineImg" src="static/images/shoes/3-3.png">
+            <div class="bottomBox" :style="bottomStyle()">
+	            <div class="leftDesign" :style="bottomWidth()">
+                <img class="lineImg" src="/static/images/shoes/3-3.png">
+	            	<img class="bgImg" v-if="imgInfo.item.goods[imgInfo.index].cutin" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutin">	            	
 	            </div>
-	            <div class="rightDesign">
-	            	<img class="bgImg" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutout">
-	            	<img class="lineImg" src="static/images/shoes/4-4.png">
+	            <div class="rightDesign" :style="bottomWidth()">
+	            	<img class="lineImg" src="/static/images/shoes/4-4.png">
+                <img class="bgImg" v-if="imgInfo.item.goods[imgInfo.index].cutout" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutout">	            	
 	            </div>
 		        </div>
 			    </div>
 	      </div>
         <div class="bottomImgBox">
-          <div class="thumbnailBox"> 
-            <div class="left-front"><span>左前</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenfront"></div>
-            <div class="right-front"><span>右前</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenfront"></div>
-            <div class="backer"><span>后跟</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenback"></div>
-            <div class="outer"><span>外侧</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenout"></div>
-            <div class="inner"><span>内侧</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenin"></div>            
+          <div class="thumbnailBox" :style="{width:  5 * setCanvas.smallImgWidth + 4 + 'px'}"> 
+            <div :style="{width: setCanvas.smallImgWidth + 'px', height: setCanvas.smallImgHeight + 'px'}"><span>左前</span><div class="left-front"><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenfront"></div></div>
+            <div :style="{width: setCanvas.smallImgWidth + 'px', height: setCanvas.smallImgHeight + 'px'}"><span>右前</span><div class="right-front"><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenfront"></div></div>
+            <div class="backer" :style="{width: setCanvas.smallImgWidth + 'px', height: setCanvas.smallImgHeight + 'px'}"><span>后跟</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenback"></div>
+            <div class="outer" :style="{width: setCanvas.smallImgWidth + 'px', height: setCanvas.smallImgHeight + 'px'}"><span>外侧</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenout"></div>
+            <div class="inner" :style="{width: setCanvas.smallImgWidth + 'px', height: setCanvas.smallImgHeight + 'px'}"><span>内侧</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenin"></div>            
           </div>
         </div>
       </div>
-      <div class="rightCloth" v-if="imgInfo.type != 'left'" :style="{width: setCanvas.width + 'px'}">
+      <div class="rightCloth" v-if="imgInfo.type != 'left'" :style="{width: width + 'px'}">
       	<div class="topNumberTop">
-      		<p class="topTitle">右前</p>
-      		<p class="numberInfo">12123efdfrrerrfrfrrr</p>
-      	</div>
+          <p class="topTitle">右前</p>
+          <p class="numberInfo">{{'EFR-VC-A(' + shoesSize(imgInfo.item.goods[imgInfo.index].shoes_size) + ')'}}</p>
+        </div>
       	<div class="topNumberCenter">
           <p class="topTitle">右后</p>
-      		<p class="numberInfo">12123efdfrrerrfrfrrr</p>
+      		<p class="numberInfo">{{'EFR-VC-A(' + shoesSize(imgInfo.item.goods[imgInfo.index].shoes_size) + ')'}}</p>
       	</div>
       	<div class="topNumberLeft">
           <p class="topTitle">右外</p>
-      		<p class="numberInfo">12123efdfrrerrfrfrrr</p>
+      		<p class="numberInfo">{{'EFR-VC-A(' + shoesSize(imgInfo.item.goods[imgInfo.index].shoes_size) + ')'}}</p>
       	</div>
       	<div class="topNumberRight">
           <p class="topTitle">右内</p>
-      		<p class="numberInfo">12123efdfrrerrfrfrrr</p>
+      		<p class="numberInfo">{{'EFR-VC-A(' + shoesSize(imgInfo.item.goods[imgInfo.index].shoes_size) + ')'}}</p>
       	</div>
       	<div class="orderInfo">
         	<div class="orderTitle">
@@ -115,68 +115,68 @@
         	</div>
         	<div class="orderBody">
         		<div class="oneInfo">          			
-        			<p><label>订单日期：</label><span class="underline">{{imgInfo.item.ordertime}}</span></p>
+        			<p><label>订单日期：</label><span class="underline">{{imgInfo.item.paytime | timeToDay}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>订单单号：</label><span class="underline">{{imgInfo.item.ordernumber}}</span></p>
+        			<p><label>订单单号：</label><span class="underline">{{imgInfo.item.ordersn}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>平台名称：</label><span class="underline">{{imgInfo.item.platformname}}</span></p>
+        			<p><label>平台名称：</label><span class="underline">{{'爆造'}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>品牌名称：</label><span class="underline">{{imgInfo.item.brandname}}</span></p>
+        			<p><label>品牌名称：</label><span class="underline">{{'爆造'}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>货品名称：</label><span class="underline">{{imgInfo.item.goodsname}}</span></p>
+        			<p><label>货品名称：</label><span class="underline">{{'EFR-VC-A'}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>货品号码：</label><span class="underline">{{shoesSize(imgInfo.item.goods[imgInfo.index].sizeTitle)}}</span></p>
+        			<p><label>货品号码：</label><span class="underline">{{shoesSize(imgInfo.item.goods[imgInfo.index].shoes_size)}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
         			<p><label>客户名称：</label><span class="underline">{{imgInfo.item.name}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>联系电话：</label><span class="underline">{{imgInfo.item.phonenumber}}</span></p>
+        			<p><label>联系电话：</label><span class="underline">{{imgInfo.item.tel}}</span></p>
         		</div>
         		<div class="oneInfo">	            			
-        			<p><label>物流地址：</label><span>{{imgInfo.item.address}}</span></p>
+        			<p><label>物流地址：</label><span>{{imgInfo.item.province + ' ' + imgInfo.item.city + ' ' + imgInfo.item.area + ' ' + imgInfo.item.detail}}</span></p>
         		</div>
           </div>
         </div>
         <div class="bottomLogo">
           <span class="logoTitle">后跟标信息</span>
-          <span class="logo">爆造制造</span>
+          <span class="logo" :style="{fontSize: imgInfo.item.goods[imgInfo.index].heelword.length > 4 ? '60px' : '80px', color: imgInfo.item.goods[imgInfo.index].bgcolor.hgbColor}">{{imgInfo.item.goods[imgInfo.index].heelword}}</span>
           <span class="logoSize">爆造后跟底帮15mmx33mm</span>
         </div>
-      	<div class="allDesign" :style="{transform: 'scale(' + shoesScale(imgInfo.item.goods[imgInfo.index].sizeTitle) + ')'}">
+      	<div class="allDesign" :style="{width: setCanvas.width + 'px'}">
       		<div class="allDesignInner">
-            <div class="topDesign">
-            	<img class="bgImg" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutfront">
-            	<img class="lineImg" src="static/images/shoes/1-1.png">
+            <div class="topDesign" :style="frontStyle()">
+              <img class="lineImg" src="/static/images/shoes/1-1.png">
+              <img class="bgImg" v-if="imgInfo.item.goods[imgInfo.index].cutfront" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutfront">
             </div>
-            <div class="centerDesign">
-            	<img class="bgImg" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutback">
-            	<img class="lineImg" src="static/images/shoes/2-2.png">
+            <div class="centerDesign" :style="centerStyle()">
+              <img class="lineImg" src="/static/images/shoes/2-2.png">
+              <img class="bgImg" v-if="imgInfo.item.goods[imgInfo.index].cutback" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutback">
             </div>
-            <div class="bottomBox">
-	            <div class="leftDesign">
-	            	<img class="bgImg" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutin">
-	            	<img class="lineImg" src="static/images/shoes/3-3.png">
-	            </div>
-	            <div class="rightDesign">
-	            	<img class="bgImg" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutout">
-	            	<img class="lineImg" src="static/images/shoes/4-4.png">
-	            </div>
-		        </div>
-			    </div>
+            <div class="bottomBox" :style="bottomStyle()">
+              <div class="leftDesign" :style="bottomWidth()">
+                <img class="lineImg" src="/static/images/shoes/3-3.png">
+                <img class="bgImg" v-if="imgInfo.item.goods[imgInfo.index].cutin" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutin">                
+              </div>
+              <div class="rightDesign" :style="bottomWidth()">
+                <img class="lineImg" src="/static/images/shoes/4-4.png">
+                <img class="bgImg" v-if="imgInfo.item.goods[imgInfo.index].cutout" :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].cutout">                
+              </div>
+            </div>
+          </div>
 	      </div>
         <div class="bottomImgBox">
-          <div class="thumbnailBox"> 
-            <div class="left-front"><span>左前</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenfront"></div>
-            <div class="right-front"><span>右前</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenfront"></div>
-            <div class="backer"><span>后跟</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenback"></div>
-            <div class="outer"><span>外侧</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenout"></div>
-            <div class="inner"><span>内侧</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenin"></div>            
+          <div class="thumbnailBox" :style="{width:  5 * setCanvas.smallImgWidth + 4 + 'px'}"> 
+            <div :style="{width: setCanvas.smallImgWidth + 'px', height: setCanvas.smallImgHeight + 'px'}"><span>左前</span><div class="left-front"><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenfront"></div></div>
+            <div :style="{width: setCanvas.smallImgWidth + 'px', height: setCanvas.smallImgHeight + 'px'}"><span>右前</span><div class="right-front"><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenfront"></div></div>
+            <div class="backer" :style="{width: setCanvas.smallImgWidth + 'px', height: setCanvas.smallImgHeight + 'px'}"><span>后跟</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenback"></div>
+            <div class="outer" :style="{width: setCanvas.smallImgWidth + 'px', height: setCanvas.smallImgHeight + 'px'}"><span>外侧</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenout"></div>
+            <div class="inner" :style="{width: setCanvas.smallImgWidth + 'px', height: setCanvas.smallImgHeight + 'px'}"><span>内侧</span><img :src="baseUrlShoes + imgInfo.item.goods[imgInfo.index].screenin"></div>            
           </div>
         </div>
       </div>
@@ -185,15 +185,40 @@
 </div>
 </template>
 <script>
+  import config from '@/assets/myconfig/url.config.js'
 	export default {
     name: 'GeneratePicture',
     props:['createimg'],
     data() {
     	return {
-    		baseUrlShoes: '/baseUrlShoes',
+    		baseUrlShoes: config.imgurl1,
     		setCanvas: {
-    			width: 2200
+          offsetTop: 34,
+          topTopBlank: 0,
+          topBottomBlank: 810,
+          centerTopBlank: 740,
+          centerBottomBlank: 690,
+          bottomTopBlank: 1290,
+          bottomBottomBlank: 0,
+          baseSize: 2000,
+          smallImgWidth: 586,
+          smallImgHeight: 280
     		},
+        baseWH: {
+          front: {
+            width: 1530,
+            height: 1250 
+          },
+          center: {
+            width: 1150,
+            height: 518
+          },
+          bottom: {
+            width: 1120,
+            height: 550
+          }
+        },
+        width: 0,
     		imgInfo: null,
     		load: false
     	}
@@ -201,8 +226,8 @@
     watch: {
       createimg() {
       	this.imgInfo = this.createimg;
-
       	if(this.createimg && this.load){
+          this.width =  this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).front.width + 300 > (6 + this.setCanvas.smallImgWidth) * 5 ? this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).front.width + 300 : (6 + this.setCanvas.smallImgWidth) * 5;
       		this.$nextTick(function() {
 		        this.createCanvas()
 		      })
@@ -210,51 +235,303 @@
       }
     },
     methods: {
-      shoesScale(size) {
+      centerStyle() {
+        return {
+          marginTop: -(this.setCanvas.topBottomBlank * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).front.height / this.baseWH.front.height + this.setCanvas.centerTopBlank * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).center.height / this.baseWH.center.height) + 40 + 'px', 
+          marginLeft: (this.width-this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).center.width / this.baseWH.center.width)/2 + 'px',
+          width: this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).center.width / this.baseWH.center.width + 'px',
+          height: this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).center.height / this.baseWH.center.height + 'px'
+        }
+      },
+      bottomStyle() {
+        return {
+          marginTop: -(this.setCanvas.centerBottomBlank * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).center.height / this.baseWH.center.height + this.setCanvas.bottomTopBlank * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).bottom.height / this.baseWH.bottom.height) + 40 + 'px',
+          marginLeft: (this.width-this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).bottom.width / this.baseWH.bottom.width)/2 + 'px', 
+          width: this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).bottom.width / this.baseWH.bottom.width + 'px',
+          height: this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).bottom.height / this.baseWH.bottom.height + 'px'
+        }
+      },
+      bottomWidth() {
+        return {
+          width: this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).bottom.width / this.baseWH.bottom.width + 'px',
+          height: this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).bottom.height / this.baseWH.bottom.height + 'px'
+        }
+      },
+      frontStyle() {
+        return {
+          marginTop: -this.setCanvas.topTopBlank * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).front.height / this.baseWH.front.height + 40 + 'px', 
+          marginLeft: (this.width - this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).front.width / this.baseWH.front.width)/2 + this.setCanvas.offsetTop * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).front.width / this.baseWH.front.width + 'px',
+          width: this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).front.width / this.baseWH.front.width + 'px', 
+          height: this.setCanvas.baseSize * this.shoesResize(this.imgInfo.item.goods[this.imgInfo.index].shoes_size).front.height / this.baseWH.front.height + 'px'
+        }
+      },
+      /*shoesScale(size) {
+        size = Math.parseInt(size.split('\(')[0]);
         switch(size) {
           case 44:
             return 1;
           case 43:
-            return 0.9882;
+            return 0.9903;
           case 42:
-            return 0.9685;
+            return 0.9626;
           case 41:
-            return 0.9559; 
+            return 0.9542; 
           case 40:
-            return 0.9337;
+            return 1;
           case 39:
-            return 0.9244;
+            return 0.9199;
           case 38:
-            return 0.8989;
+            return 0.8970;
           case 37:
-            return 0.8920;
+            return 0.8855;
           case 36:
-            return 0.8693;
+            return 0.8626;
           case 35:
-            return 0.8561;
+            return 0.8411;
+        }
+      },*/
+      shoesResize(size) {
+        size = size.split('\(')[0];
+        switch(size) {
+          case '44':
+            return {
+              front: {
+                width: 3045,
+                height: 2505 
+              },
+              center: {
+                width: 2050,
+                height: 912
+              },
+              bottom: {
+                width: 2326,
+                height: 1180
+              }
+            };
+          case '43':
+            return {
+              front: {
+                width: 2998,
+                height: 2460 
+              },
+              center: {
+                width: 2030,
+                height: 900
+              },
+              bottom: {
+                width: 2300,
+                height: 1132
+              }
+            };
+          case '42':
+            return {
+              front: {
+                width: 2898,
+                height: 2382 
+              },
+              center: {
+                width: 1970,
+                height: 885
+              },
+              bottom: {
+                width: 2250,
+                height: 1090
+              }
+            };
+          case '41':
+            return {
+              front: {
+                width: 2850,
+                height: 2334 
+              },
+              center: {
+                width: 1940,
+                height: 875
+              },
+              bottom: {
+                width: 2206,
+                height: 1074
+              }
+            }; 
+          case '40':
+            return {
+              front: {
+                width: 2810,
+                height: 2252 
+              },
+              center: {
+                width: 1890,
+                height: 870
+              },
+              bottom: {
+                width: 2130,
+                height: 1064
+              }
+            };
+          case '39':
+            return {
+              front: {
+                width: 2764,
+                height: 2216 
+              },
+              center: {
+                width: 1866,
+                height: 865
+              },
+              bottom: {
+                width: 2100,
+                height: 1048
+              }
+            };
+          case '38':
+            return {
+              front: {
+                width: 2666,
+                height: 2150 
+              },
+              center: {
+                width: 1814,
+                height: 840
+              },
+              bottom: {
+                width: 2040,
+                height: 1000
+              }
+            };
+          case '37':
+            return {
+              front: {
+                width: 2616,
+                height: 2114 
+              },
+              center: {
+                width: 1785,
+                height: 828
+              },
+              bottom: {
+                width: 2010,
+                height: 975
+              }
+            };
+          case '36':
+            return {
+              front: {
+                width: 2540,
+                height: 2024 
+              },
+              center: {
+                width: 1736,
+                height: 805
+              },
+              bottom: {
+                width: 1955,
+                height: 946
+              }
+            };
+          case '35':
+            return {
+              front: {
+                width: 2485,
+                height: 1982 
+              },
+              center: {
+                width: 1708,
+                height: 790
+              },
+              bottom: {
+                width: 1905,
+                height: 916
+              }
+            };
         }
       },
-      shoesSize(size) {
+      /*shoesbfResize(size) {
+        size = size.split('\(')[0];
         switch(size) {
-          case 44:
-            return '44# (USA10.5#)';
-          case 43:
-            return '43# (USA10.0#)';
-          case 42:
-            return '42# (USA9.0#)';
-          case 41:
-            return '41# (USA8.5#)'; 
-          case 40:
-            return '40# (USA7.5#)';
-          case 39:
-            return '39# (USA7.0#)';
-          case 38:
-            return '38# (USA6.0#)';
-          case 37:
-            return '37# (USA5.5#)';
-          case 36:
-            return '36# (USA4.5#)';
           case 35:
+            return {
+              front: 0.876628648,
+              center: 0.900864286,
+              bottom: 0.890107178
+            };
+          case 36:
+            return {
+              front: 0.894249325,
+              center: 0.915011832,
+              bottom: 0.90580439
+            };
+          case 37:
+            return {
+              front: 0.929503986,
+              center: 0.94335837,
+              bottom: 0.90580439
+            };
+          case 38:
+            return {
+              front: 0.947124662,
+              center: 0.957505916,
+              bottom: 0.937204983
+            };
+          case 39:
+            return {
+              front: 0.982379324,
+              center: 0.985826731,
+              bottom: 0.952902195
+            };
+          case 40:
+            return {
+              front: 1,
+              center: 1,
+              bottom: 1
+            };
+          case 41:
+            return {
+              front: 1.035248007,
+              center: 1.028346538,
+              bottom: 1.031406764
+            };
+          case 42:
+            return {
+              front: 1.052868683,
+              center: 1.042494084,
+              bottom: 1.047110146
+            };
+          case 43:
+            return {
+              front: 1.088149962,
+              center: 1.070814899,
+              bottom: 1.078504569
+            };
+          case 44:
+            return {
+              front: 1.105797256,
+              center: 1.084988168,
+              bottom: 1.094201781
+            };
+        }
+      },*/
+      shoesSize(size) {
+        size = size.split('\(')[0];
+        switch(size) {
+          case '44':
+            return '44# (USA10.5#)';
+          case '43':
+            return '43# (USA10.0#)';
+          case '42':
+            return '42# (USA9.0#)';
+          case '41':
+            return '41# (USA8.5#)'; 
+          case '40':
+            return '40# (USA7.5#)';
+          case '39':
+            return '39# (USA7.0#)';
+          case '38':
+            return '38# (USA6.0#)';
+          case '37':
+            return '37# (USA5.5#)';
+          case '36':
+            return '36# (USA4.5#)';
+          case '35':
             return '35# (USA4.0#)';
         }
       },
@@ -275,17 +552,29 @@
 		      }
 		    });
 		    Promise.all([
-          loadImg(_this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].cutfront),
-          loadImg(_this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].cutback),
-          loadImg(_this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].cutin),
-          loadImg(_this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].cutout),
-          loadImg(_this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].screenfront),
-          loadImg(_this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].screenback),
-          loadImg(_this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].screenin),
-          loadImg(_this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].screenout)
+          loadImg(_this.imgInfo.item.goods[_this.imgInfo.index].cutfront ? _this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].cutfront : '/static/images/shoes/2-2.png'),
+          loadImg(_this.imgInfo.item.goods[_this.imgInfo.index].cutback ? _this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].cutback : '/static/images/shoes/2-2.png'),
+          loadImg(_this.imgInfo.item.goods[_this.imgInfo.index].cutin ? _this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].cutin : '/static/images/shoes/2-2.png'),
+          loadImg(_this.imgInfo.item.goods[_this.imgInfo.index].cutout ? _this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].cutout : '/static/images/shoes/2-2.png'),
+          loadImg(_this.imgInfo.item.goods[_this.imgInfo.index].screenfront ? _this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].screenfront : '/static/images/shoes/2-2.png'),
+          loadImg(_this.imgInfo.item.goods[_this.imgInfo.index].screenback ? _this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].screenback : '/static/images/shoes/2-2.png'),
+          loadImg(_this.imgInfo.item.goods[_this.imgInfo.index].screenin ? _this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].screenin : '/static/images/shoes/2-2.png'),
+          loadImg(_this.imgInfo.item.goods[_this.imgInfo.index].screenout ? _this.baseUrlShoes + _this.imgInfo.item.goods[_this.imgInfo.index].screenout : '/static/images/shoes/2-2.png')
 		    ]).then(function(){
           html2canvas(document.querySelector("#cutbox"), {width: document.querySelector("#cutbox").clientWidth, height: document.querySelector("#cutbox").clientHeight,useCORS: true}).then(function(canvas){
-	          canvas.toBlob(function(blob) {
+            let dataurl = canvas.toDataURL('image/jpeg', 1.0);
+            if(_this.imgInfo.type == 'left'){
+                _this.imgInfo.item.goods[_this.imgInfo.index].leftimg = dataURLtoBlob(dataurl);
+              };
+            if(_this.imgInfo.type == 'right'){
+              _this.imgInfo.item.goods[_this.imgInfo.index].rightimg = dataURLtoBlob(dataurl);
+            }
+
+            if(_this.imgInfo.type == 'all'){
+              _this.imgInfo.item.goods[_this.imgInfo.index].aboutimg = dataURLtoBlob(dataurl);
+            }
+            _this.$Spin.hide();
+	          /*canvas.toBlob(function(blob) {
 	          	if(_this.imgInfo.type == 'left'){
 	          		_this.imgInfo.item.goods[_this.imgInfo.index].leftshoe = blob;
 	          	};
@@ -298,57 +587,71 @@
 	          		_this.imgInfo.item.goods[_this.imgInfo.index].allshoe = blob;
 	          	}
 	          	_this.$Spin.hide();
-	          	_this.imgInfo = null;
-		            /*download.addEventListener('click', function(){
-		              saveAs(blob, "爆造.jpeg");
-		            })
-		            var formData = new FormData();
-		            formData.append('thumb', blob);
-		            $.ajax({
-		              url: '',
-		              type: "POST",
-		              data: formData,
-		              cache:false,
-		              processData: false,  // 告诉jQuery不要去处理发送的数据
-		              contentType: false ,  // 告诉jQuery不要去设置Content-Type请求头
-		              success: function(msg){
-		                if(msg.code=='200'){
-		                }else {
-
-		                }
-		              },
-		              error: function(e){
-		                console.log(e);
-		              }
-		            });*/
-		        },'image/jpeg');
+		        },'image/jpeg');*/
 			    })	      
-		    })
+		    }).catch(function(e){
+          _this.$Spin.hide();
+          _this.imgInfo = null;
+          _this.$Notice.error({
+            title: '错误提醒',
+            desc: '图片加载失败',
+            duration:2
+          })
+        })
 	    }
     },
     mounted() {
     	this.load = true;
     }
 	}
+
+function dataURLtoBlob(dataurl) {
+  var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+  bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+  while(n--){
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  u8arr[13] = 1;
+  u8arr[14] = 1;
+  u8arr[15] = 44;
+  u8arr[16] = 1;
+  u8arr[17] = 44;
+  return new Blob([u8arr], {type:mime});
+} 
+
 function loadImg(url) {
   return new Promise (function(resolve, reject) {
   	let img = new Image();
   	img.src = url;
   	img.onload = function(img){
-      resolve();
+      resolve(img);
   	}
   	img.onerror = function(){
-      reject();
+      reject(false);
   	}
   })
 }
 </script>
 <style scoped>
   .topDesign,.centerDesign{
+    width: 100%;
    	position: relative;
   }
   .leftDesign,.rightDesign{
+     width: 100%;
    	position: absolute;
+  }
+
+  #cutbox{
+    font-size: 36px;
+    padding-bottom: 40px;
+    height: auto;
+  }
+
+  #cutbox:after{
+    content: '';
+    display: block;
+    clear: both;
   }
 
   #cutbox img{
@@ -356,17 +659,21 @@ function loadImg(url) {
   }
 
   .lineImg{
-   	position: absolute;
-   	left: 0;
-   	top: 0;
+   	position: relative;
+    z-index: 999;
+  }
+
+  .bgImg{
+    position: absolute;
+    z-index: 998;
+    left: 0;
+    top: 0;
   }
 
   .leftCloth,.rightCloth{
    	position: relative;
    	float: left;
    	box-sizing: border-box;
-   	overflow: hidden;
-   	padding: 100px;
   }
 
   .allDesign{
@@ -377,6 +684,12 @@ function loadImg(url) {
   .allDesignInner{
    	width: 100%;
    	position: relative;
+  }
+
+  .allDesignInner img{
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .leftCloth .allDesign .allDesignInner{
@@ -392,26 +705,20 @@ function loadImg(url) {
    position: fixed;
    left: 0;
    top: 0;
-    width: 100%;
+   width: 100%;
     height: 100%;
-    overflow: hidden;
+    background-color: rgba(0,0,0,0);
   }
 
   .img-inner{
     width: 100%;
     height: 100%;
-    overflow: scroll;
-    opacity: 0;
-  }
-
-  #cutbox{
-   	width: 4400px;
-   	overflow: hidden;
+    opacity: 1;
   }
 
   .topNumberTop,.topNumberCenter,.topNumberLeft,.topNumberRight{
    	z-index: 100;
-   	padding: 5px;
+   	padding: 15px;
    	border-radius: 4px;
    	position: absolute;
    	text-align: center;
@@ -434,7 +741,7 @@ function loadImg(url) {
   }
 
   .centerDesign{
-    margin-top: -1500px;
+    margin-top: -80%;
   }
    
   .topNumberTop,.topNumberCenter{
@@ -447,17 +754,17 @@ function loadImg(url) {
   }
 
   .topNumberTop{
-   	top: 3%;
+   	top: 4%;
   }
 
   .topNumberCenter{
-    top: 42%;
+    top: 49%;
   }
 
   .bottomBox{
    	position: relative;
    	width: 100%;
-    margin-top: -1600px;
+    margin-top: -95%;
     -webkit-transform: rotateY(180deg);
     -moz-transform: rotateY(180deg);
     -ms-transform: rotateY(180deg);
@@ -474,49 +781,49 @@ function loadImg(url) {
   .leftDesign{
    	position: relative;
    	float: left;
-    margin-left: -500px;
-    -webkit-transform: rotateZ(90deg) rotateX(180deg);
-    -moz-transform: rotateZ(90deg) rotateX(180deg);
-    -ms-transform: rotateZ(90deg) rotateX(180deg);
-    -o-transform: rotateZ(90deg) rotateX(180deg);
-    transform: rotateZ(90deg) rotateX(180deg);
+    margin-left: -29.5%;
+    -webkit-transform: rotateZ(77deg) rotateX(180deg);
+    -moz-transform: rotateZ(77deg) rotateX(180deg);
+    -ms-transform: rotateZ(77deg) rotateX(180deg);
+    -o-transform: rotateZ(77deg) rotateX(180deg);
+    transform: rotateZ(77deg) rotateX(180deg);
   }
 
   .rightDesign{
     position: absolute;
-    right: -500px;
+    right: -29.5%;
     top: 0;
-    -webkit-transform: rotateZ(-90deg) rotateX(180deg);
-    -moz-transform: rotateZ(-90deg) rotateX(180deg);
-    -ms-transform: rotateZ(-90deg) rotateX(180deg);
-    -o-transform: rotateZ(-90deg) rotateX(180deg);
-    transform: rotateZ(-90deg) rotateX(180deg);
+    -webkit-transform: rotateZ(-77deg) rotateX(180deg);
+    -moz-transform: rotateZ(-77deg) rotateX(180deg);
+    -ms-transform: rotateZ(-77deg) rotateX(180deg);
+    -o-transform: rotateZ(-77deg) rotateX(180deg);
+    transform: rotateZ(-77deg) rotateX(180deg);
   }
 
   .topNumberLeft{
-    left: 32%;
-    top: 68%;
-    -webkit-transform: rotateZ(81deg);
-    -moz-transform: rotateZ(81deg);
-    -ms-transform: rotateZ(81deg);
-    -o-transform: rotateZ(81deg);
-    transform: rotateZ(81deg);
+    left: 23%;
+    top: 70%;
+    -webkit-transform: rotateZ(90deg);
+    -moz-transform: rotateZ(90deg);
+    -ms-transform: rotateZ(90deg);
+    -o-transform: rotateZ(90deg);
+    transform: rotateZ(90deg);
   }
 
   .topNumberRight{
-    right: 32%;
-    top: 68%;
-    -webkit-transform: rotateZ(-81deg);
-    -moz-transform: rotateZ(-81deg);
-    -ms-transform: rotateZ(-81deg);
-    -o-transform:rotateZ(-81deg);
-    transform: rotateZ(-81deg);
+    right: 23%;
+    top: 70%;
+    -webkit-transform: rotateZ(-90deg);
+    -moz-transform: rotateZ(-90deg);
+    -ms-transform: rotateZ(-90deg);
+    -o-transform:rotateZ(-90deg);
+    transform: rotateZ(-90deg);
   }
 
   .orderInfo{
     position: absolute;
     left: 50%;
-    top: 60%;
+    top: 66%;
     border-radius: 4px;
     z-index: 99999;
     box-sizing: border-box;
@@ -532,7 +839,7 @@ function loadImg(url) {
   .bottomLogo{
     position: absolute;
     left: 50%;
-    top: 75%;
+    top: 84%;
     width: 390px;
     text-align: center;
     -webkit-transform: translate(-50%, 0);
@@ -543,9 +850,9 @@ function loadImg(url) {
   }
 
   .logoTitle{
-    padding: 10px 0;
+    padding: 5px 0;
     width: 100%;
-    font-size: 56px;
+    font-size: 50px;
     font-weight: bold;
     display: inline-block;
   }
@@ -553,10 +860,10 @@ function loadImg(url) {
   .logo{
     background-color: #fff;
     border: 2px solid #666;
-    height: 176px;
-    letter-spacing: 5px;
-    line-height: 168px;
-    font-size: 80px;
+    height: 178px;
+    letter-spacing: 3px;
+    line-height: 178px;
+    font-size: 38px;
     font-weight: bold;
     display: inline-block;
     width: 100%;
@@ -564,46 +871,61 @@ function loadImg(url) {
 
   .logoSize{
     display: inline-block;
-    padding-top: 10px;
-    font-size: 24px;
-    letter-spacing: 2px;
+    padding-top: 5px;
+    font-size: 28px;
+    letter-spacing: 1px;
   }
 
   .bottomImgBox{
+    margin-top: 40px;
     position: relative;   
     width: 100%;
-    margin-top: 100px;
   }
 
   .bottomImgBox>.thumbnailBox{
     position: relative;
-    width: 1504px;
     margin: 0 auto;
     border:2px solid #666;
-    overflow: hidden;
+  }
+
+  .bottomImgBox>.thumbnailBox:before{
+    position: absolute;
+    z-index: 999999;
+    right: 20px;
+    top: 20px;
+    content: '';
+    width: 35px;
+    height: 35px;
+    border: 4px solid #000;
+    border-radius: 50%;
   }
 
   .bottomImgBox>.thumbnailBox:after{
-    position: absolute;
-    z-index: 999999;
-    right: 15px;
-    top: 15px;
+    display: block;
     content: '';
-    width: 15px;
-    height: 15px;
-    border: 2px solid #000;
-    border-radius: 50%;
+    clear: both;
   }
 
   .bottomImgBox>.thumbnailBox>div{
     float: left;
-    width: 300px;
     position: relative;
     border:2px solid #666;
   }
 
-  .bottomImgBox>.thumbnailBox>div>img{
+  .bottomImgBox>.thumbnailBox>div>img,.bottomImgBox>.thumbnailBox .left-front>img, .bottomImgBox>.thumbnailBox .right-front>img{
+    position: absolute;
     width: 100%;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+  }
+
+  .bottomImgBox>.thumbnailBox>div>img{
+    top: 60%;
   }
 
   .bottomImgBox>.thumbnailBox>div>span{
@@ -613,7 +935,10 @@ function loadImg(url) {
     z-index: 999;
   }
 
-  .bottomImgBox>.thumbnailBox>.left-front>img{
+  .bottomImgBox>.thumbnailBox .left-front{
+    position: relative;
+    width: 100%;
+    height: 100%;
     -webkit-transform: rotateX(180deg) rotateZ(90deg);
     -moz-transform: rotateX(180deg) rotateZ(90deg);
     -ms-transform: rotateX(180deg) rotateZ(90deg);
@@ -621,7 +946,10 @@ function loadImg(url) {
     transform: rotateX(180deg) rotateZ(90deg);
   }
 
-  .bottomImgBox>.thumbnailBox>.right-front>img{
+  .bottomImgBox>.thumbnailBox .right-front{
+    position: relative;
+    width: 100%;
+    height: 100%;
     -webkit-transform: rotateZ(90deg);
     -moz-transform: rotateZ(90deg);
     -ms-transform: rotateZ(90deg);
@@ -630,16 +958,16 @@ function loadImg(url) {
   }
 
   .orderInfo p{
-   	margin-top: 5px;
-   	line-height: 24px;
+   	margin-top: 10px;
+   	line-height: 50px;
   }
 
   .oneInfo{
-   	width: 250px;
+   	width: 580px;
   }
 
   .orderInfo p span.underline{
-   	width: calc(100% - 80px);
+   	width: calc(100% - 200px);
    	position: relative;
    	display: inline-block;
   }
@@ -648,7 +976,7 @@ function loadImg(url) {
    	position: relative;
    	text-align: center;
    	padding: 10px 0;
-   	font-size: 18px;
+   	font-size: 50px;
    	font-weight: bold;
   }
 
@@ -658,18 +986,18 @@ function loadImg(url) {
     left: 0;
     bottom: 0;
     width: 100%;
-    height: 1px;
+    height: 2px;
     background-color: #999;
   }
 
   .orderTitle .dot{
    	position: absolute;
    	content: '';
-    left: 10px;
+    left: 30px;
     top: 50%;
-    border: 2px solid #e60012;
-    width: 15px;
-    height: 15px;
+    border: 4px solid #e60012;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     z-index: 99999;
     -webkit-transform: translate(0, -50%);
@@ -680,7 +1008,6 @@ function loadImg(url) {
   }
 
   .orderBody{
-    font-size: 16px;
-   	padding: 10px;
+   	padding: 15px;
   }
 </style>

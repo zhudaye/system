@@ -1,6 +1,7 @@
 <template>
   <div>
   	<div>{{name}}</div>
+    
   </div>
 </template>
 
@@ -9,7 +10,7 @@ export default {
   name: 'clientmoney',
   data() {
   	return {
-  		name: 'clientmoney'
+  		name: 'clientintegral'
   	}
   }
 }
