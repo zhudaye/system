@@ -4,8 +4,7 @@
 			<div class="top-header-inner">
 				<Row class="top-nav">
 		      <Col span="24" class="top-right">
-		        <DatePicker v-model="search" type="date" placeholder="按时间查询" style="width: 200px"></DatePicker>
-		        <Button type="primary" @click="submit">搜索</Button>
+		        <DatePicker v-model="search" type="date" placeholder="按时间查询" style="width: 200px"></DatePicker>		       
 		      </Col>
 		    </Row>
 		    <Row class="table-title">
@@ -31,7 +30,7 @@
 		    </Row>
 		  </div>
 	  </div>
-    <my-waitreceive class="main-content" :passvalue="passvalue"></my-waitreceive>
+    <my-waitreceive class="main-content" :passvalue="formatdate"></my-waitreceive>
 	</div>
 </template>
 <script>
@@ -48,23 +47,15 @@
 		},
 		data() {
 			return {
-        search: '',//搜索内容
-        passvalue:''
+        search: ''
 			}
 		},
-		watch: {
-		},
-    methods: {
-      changePush(status) {
-				this.$store.commit('changeIsPush', status);
-			},
-			submit() {
-				if(this.search == '' || this.passvalue == new Date(this.search).Format("yyyy-MM-dd")) {
-					return
-				}
-				this.passvalue = new Date(this.search).Format("yyyy-MM-dd");
+		computed: {
+			formatdate() {
+				if(!this.search) return false
+				return new Date(this.search).Format("yyyy-MM-dd")
 			}
-    }
+		}
 	}
 </script>
 <style scoped>

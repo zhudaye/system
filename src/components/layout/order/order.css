@@ -2,15 +2,6 @@
   	padding: 5px 0;
   	display: block;
   }
-  .vertical-center-modal{
-	  display: flex;
-	  align-items: center;
-	  justify-content: center;
-	}
-
-	.vertical-center-modal .ivu-modal{
-    top: 0;
-  }
 
 	.top-nav {
 		padding: 10px 15px;

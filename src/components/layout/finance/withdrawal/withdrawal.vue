@@ -2,7 +2,8 @@
     <div>
         <Row class="postiFix">
         <Col span="5">
-  <Button @click="onTab(index)" v-for="(tabs,index) in tabButton"  :class="{active: showTab == index}" style="margin-right:10px">{{tabs}}</Button>
+        <button class="button" @click="onTab(index)" v-for="(tabs,index) in tabButton"  :class="{bactive: showTab == index}" style="margin-right:10px">
+            <span style="float:right;font-weight:500">/</span>{{tabs}}</button>
             </Col>
             <Col span="3">
             <Button type="primary" size="default" @click="method5('tableExcel')">
@@ -34,14 +35,14 @@
                 <td>
                   <Checkbox v-model="user.isIn" @on-change="changeAllSelect"></Checkbox>
                 </td>
-                <td>{{user.id}}</td>
-                <td>{{user.name}}</td>
-                <td>{{user.email}}</td>
-                <td>{{user.phone}}</td>
-                <td>{{user.website}}</td>
+                <td>{{user.nickname}}</td>
+                <td>{{user.idnumber}}</td>
+                <td>{{user.money/100}}</td>
+                <td>{{user.alipay}}</td>
+                <td>{{user.inputtime}}</td>
                 <td>
-                    <Button @click="deleteSuccse" class="ivu-btn-primary ivu-btn-small">成功</Button>
-                    <Button @click="deleteFaile(index)" class="ivu-btn-error ivu-btn-small" :id="user.id">
+                    <Button @click="deleteSuccse(index)" class="ivu-btn-primary ivu-btn-small">成功</Button>
+                    <Button @click="deleteFaile(index)" class="ivu-btn-error ivu-btn-small">
                         失败
                     </Button>
                 </td>
@@ -157,36 +158,71 @@ export default {
         },
           //单独处理失败
        deleteFaile: function (index) {
-         let _this = this;
+          let _fail = this;
+           var withdrawid=_fail.users[index].withdrawid;
+         
+         
        this.$Modal.confirm({
         title: '请输入失败原因',
-         content: `<Input type="text" id="result" placeholder="" style="width: 300px"></Input>`,
+         content: `<Input type="text" id="result" placeholder="" style="width: 300px;border:1px solid grey"></Input>`,
         onCancel(){
 
         },
         onOk() {
-         _this.users.splice(index, 1);
-          
+          _fail.users.splice(index, 1);
+          var desc=$("#result").val();
+          $.ajax({
+                type:"POST",
+                url:'http://192.168.2.239/bzadmin/public/index.php/withdrawFail.html',
+                data: {withdrawid:withdrawid,desc:desc},
+                dataType:"json",
+                success: function(msg){
+                     if(msg.code=='200'){
+                        return;
+                    }
+                    if(msg.code=='401'){
+                        //状态码401  未登录  跳转到登录页面
+                        login401();
+                        return;
+                    }  else {
+                        alert(msg.msg);
+                    }
+                }
+            });
         }
       })
     },
     //单独处理成功
-      deleteSuccse: function (event) {
-       this.$Modal.confirm({
+      deleteSuccse: function (index) {
+          let _this = this;
+          var withdrawid=_this.users[index].withdrawid;
+          var j = parseInt(withdrawid);
+          this.$Modal.confirm({
         title: '提示',
         content: `请确认已成功转账到用户指定账号！`,
         onCancel(){
 
         },
         onOk() {
-          // _this.data.splice(index, 1);
-          // _this.data.splice(index, 1);
-          if (event) {
-          var id = event.target.id;
-          var order=event.target;
-          //  console.log(id);
-          $(order).parent().parent().parent().remove();
-          }
+          _this.users.splice(index, 1);
+             $.ajax({
+                type: "POST",
+                url:'http://192.168.2.239/bzadmin/public/index.php/withdrawSuccess.html',
+                data: {withdrawid:j},
+                success: function(msg){
+                    if(msg.code=='200'){
+                        return;
+                    }
+                    if(msg.code=='401'){
+                        //状态码401  未登录  跳转到登录页面
+                        login401();
+                        return;
+                    }  else {
+                        alert(msg.msg);
+                    }
+                }
+
+            });
         }
       })
     },
@@ -232,20 +268,20 @@ export default {
         },
     },
   created() {
-    this.$http.get("http://jsonplaceholder.typicode.com/users").then((data) => {
+    this.$http.get("http://192.168.2.239/bzadmin/public/index.php/withdrawList.html").then((data) => {
       // console.log(data.data);
       // console.log(JSON.stringify(data.data));
-      this.users = data.data;
+      this.users = data.data.data;
       this.users = this.users.map((ele) => {
         ele.isIn = false;
         return ele;
       })
     }),
-    this.$http.get("http://jsonplaceholder.typicode.com/comments").then((data) => {
-      this.comments = data.data;
+    this.$http.get("http://192.168.2.239/bzadmin/public/index.php/withdrawList.html").then((data) => {
+      this.comments = data.data.data;
     }),
-      this.$http.get("http://jsonplaceholder.typicode.com/todos").then((data) => {
-      this.todos = data.data;
+      this.$http.get("http://192.168.2.239/bzadmin/public/index.php/withdrawList.html").then((data) => {
+      this.todos = data.data.data;
     })
   }
 }

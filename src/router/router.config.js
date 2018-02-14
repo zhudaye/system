@@ -30,57 +30,157 @@ export default [
 	        	label: '所有用户',
 	        	url: '/layout/user/management/alluser',
 	          component: 'AllUser.vue'
-	        }
+					},
+					{
+						name: 'usermanagement',
+						label: '用户管理',
+						url: '/layout/user/management/alluser',
+						component: 'UserManagement.vue'
+					},
+					{
+						name: 'orderdetails',
+						label: '推送订单详情',
+						url: '/layout/user/management/alluser',
+						component: 'OrderDetails.vue'
+					},
+					{
+						name: 'earnings',
+						label: '订单收益',
+						url: '/layout/user/management/earnings',
+						component: 'Earnings.vue'
+					},
+					{
+						name: 'editoruser',
+						label: '所有用户',
+						url: '/layout/user/management/editoruser',
+						component: 'EditorUser.vue'
+					},
+					{ //hy
+						name: 'details',
+						label: '用户管理详情',
+						url: '/layout/user/management/details',
+						component: 'Details.vue'
+					},
+					{ 
+						name: 'total',
+						label: '全部作品',
+						url: '/layout/user/management/details',
+						component: 'Total.vue'
+					},
+					{ 
+						name: 'attention',
+						label: '关注',
+						url: '/layout/user/management/details',
+						component: 'Attention.vue'
+					},
+					{ 
+						name: 'collect',
+						label: '收藏',
+						url: '/layout/user/management/details',
+						component: 'Collect.vue'
+					},
+					{ 
+						name: 'fans',
+						label: '粉丝',
+						url: '/layout/user/management/details',
+						component: 'Fans.vue'
+					},
+					{ 
+						name: 'purhistory',
+						label: '购买记录',
+						url: '/layout/user/management/details',
+						component: 'Purhistory.vue'
+					},
+					{ 
+						name: 'sale',
+						label: '售卖中的作品',
+						url: '/layout/user/management/details',
+						component: 'Sale.vue'
+					},
+					{ 
+						name: 'salhistory',
+						label: '销售记录',
+						url: '/layout/user/management/details',
+						component: 'Salhistory'
+					},
+					
+					// 禁止用户
+					{
+						name: 'banusers',
+						label: '禁止用户',
+						url: '/layout/user/management/banusers',
+						component: 'BanUsers.vue'
+					},
+					{
+						name: 'adduser',
+						label: '添加用户',
+						url: '/layout/user/management/adduser',
+						component: 'AddUser.vue'
+					},
+
+
+				
 	      ]
-	    },
-	    {
-	      name: 'adduser',
-	      label: '添加用户',
-	      url: '/layout/user/adduser',
-	      component: 'AddUser.vue'
-	    },
-	    {
-	      name: 'usergroup',
-	      label: '用户组',
-	      url: '/layout/user/usergroup',
-	      component: 'UserGroup.vue'
-	    },
-	    {
-	      name: 'forbiduser',
-	      label: '禁止用户',
-	      url: '/layout/user/forbiduser',
-	      component: 'ForbidUser.vue'
-	    },
-	    {
+			},
+			{
 	      name: 'forbidip',
 	      label: '禁止IP',
 	      url: '/layout/user/forbidip',
 	      component: 'ForbidIP.vue'
-	    },
+			},
+		
 	    {
 	      name: 'pushmessage',
-	      label: '消息推送',
-	      url: '/layout/user/pushmessage',
-	      component: 'PushMessage.vue'
+				label: '消息推送',
+				fileUrl: '/layout/user/pushmessage',
+	      url: '/layout/user/pushmessage/pushsearch',
+				component: 'PushMessage.vue',
+				children: [
+					{
+						name: 'pushsearch',
+						label: '消息推送进度搜索',
+						url: '/layout/user/pushmessage/pushsearch',
+						component: 'PushSearch.vue',
+					},
+					{
+						name: 'pushcontent',
+						label: '消息推送进度内容',
+						url: '/layout/user/pushmessage/pushcontent',
+						component: 'PushContent.vue'
+					},
+          {
+						name: 'pushbar',
+						label: '消息推送进度',
+						url: '/layout/user/pushmessage/pushbar',
+						component: 'PushBar.vue'
+					}
+				]
 	    },
+	    {
+	      name: 'usergroup',
+				label: '用户组',
+				fileUrl: '/layout/user/usergroup',
+	      url: '/layout/user/usergroup',
+				component: 'UserGroup.vue',
+	    },
+	    // {
+	    //   name: 'forbidip',
+	    //   label: '禁止IP',
+	    //   url: '/layout/user/forbidip',
+	    //   component: 'ForbidIP.vue'
+	    // },
+	    // {
+	    //   name: 'pushmessage',
+	    //   label: '消息推送',
+	    //   url: '/layout/user/pushmessage',
+	    //   component: 'PushMessage.vue'
+	    // },
 	    {
 	      name: 'designerreview',
 	      label: '设计师审核',
 	      url: '/layout/user/designerreview',
 	      component: 'DesignerReview.vue'
 	    },
-	    {
-	      name: 'recommendeduser',
-	      label: '推荐用户',
-	      url: '/layout/user/recommendeduser',
-	      component: 'RecommendedUser.vue'
-	    },
-	    {
-	      name: 'usermanagement',
-	      label: '用户管理',
-	      url: '/layout/user/usermanagement',
-	      component: 'UserManagement.vue'
-	    }
 	  ]
 	},
 	{
@@ -159,15 +259,29 @@ export default [
 	  name: 'supplychain',
 	  label: '供应链',
 	  fileUrl: '/layout/supplychain',
-	  url: '/layout/supplychain',
-	  component: 'SupplyChainIndex.vue'
+		url: '/layout/supplychain/factorymanage',
+		component: 'SupplyChainIndex.vue', 
+		children: [
+			{
+		    name: 'factorymanage',
+			  label: '工厂管理',
+			  url: '/layout/supplychain/factorymanage',
+			  component: 'FactoryManage.vue'
+			},
+			{
+		    name: 'logistics',
+			  label: '物流管理',
+			  url: '/layout/supplychain/logistics',
+			  component: 'Logistics.vue' 
+			}
+		]
 	},
 	{
 	  name: 'count',
 	  label: '统计',
 	  fileUrl: '/layout/count',
 	  url: '/layout/count',
-	  component: 'CountIndex.vue'
+		component: 'CountIndex.vue'
 	},
 	{
 	  name: 'finance',

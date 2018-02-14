@@ -10,7 +10,7 @@
       @on-ok="ok"
       @on-cancel="cancel"
       class-name="vertical-center-modal">
-        <Input v-model="pushContent" type="textarea" :rows="4" placeholder="请输入推送内容" :autosize="{minRows: 3,maxRows: 5}"></Input>
+      <Input v-model="pushContent" type="textarea" :rows="4" placeholder="请输入推送内容" :autosize="{minRows: 3,maxRows: 5}"></Input>
     </Modal>
     <div v-if="orderList && orderList.length > 0">
 	    <div class="one-order" v-for="(item, index) in orderList" :key="index">
@@ -30,7 +30,7 @@
 		        <Row> 
 		        	<Col span="24" v-for="(oneGoods, indexGoods) in item.goods" class="left-height" :key="indexGoods">
 		        	  <div class="one-goods" v-if="item.ordertype == 1">
-						      <Checkbox v-model="item.isIn" class="check-box" v-if="indexGoods == 0" @on-change="checkAllSelect"></Checkbox>
+						      <Checkbox v-model="item.isIn" class="check-box" v-if="indexGoods == 0 && !item.pushContent" @on-change="checkAllSelect"></Checkbox>
 						      <Row class="one-goods-content" type="flex" align="middle">
 						      	<Col span="5" class="one-goods-content-img">
 						      	  <p class="title">正面缩略图</p>
@@ -43,7 +43,7 @@
 						      	  	<span v-else>无</span>
 						      	  </div>
 						      	  <p class="download downloadBut" v-if="oneGoods.frontthumb"><Button type="primary" @click="loadImg(baseUrlCloth + oneGoods.frontthumb)">下载</Button></p>
-						      	  <p class="hidden" v-else>无</p>
+						      	  <p class="hidden" v-else><Button type="primary">无</Button></p>
 						        </Col>
 						        <Col span="5" class="one-goods-content-img">
 						          <p class="title">背面缩略图</p>
@@ -56,7 +56,7 @@
 						      	  	<span v-else>无</span>
 						      	  </div>
 						      	  <p class="download downloadBut" v-if="oneGoods.backthumb"><Button type="primary" @click="loadImg(baseUrlCloth + oneGoods.backthumb)">下载</Button></p>
-						      	  <p class="hidden" v-else>无</p>
+						      	  <p class="hidden" v-else><Button type="primary">无</Button></p>
 						        </Col>
 						        <Col span="14">
 						          <Row class="textCenter fiveColor">
@@ -84,7 +84,7 @@
 						      </Row>
 						    </div>
 						    <div class="one-goods" v-if="item.ordertype == 2">
-						      <Checkbox v-if="indexGoods == 0" v-model="item.isIn" class="check-box" @on-change="checkAllSelect"></Checkbox>
+						      <Checkbox v-if="indexGoods == 0 && !item.pushContent" v-model="item.isIn" class="check-box" @on-change="checkAllSelect"></Checkbox>
 							    <Row class="one-goods-content">
 							    	<Col span="24">
 								      <Row>
@@ -246,44 +246,54 @@ import myjs from '@/assets/myjs/myjs.js'
 		props:['passvalue'],
 		watch: {
 			passvalue() {
-				if(this.passvalue){
-					let loading = this.$Message.loading({
-            content: 'Loading...',
-            duration: 0
-	        });
-          this.getData(config.api + apiconfig.orderList,{page: 1, pagesize: 10, querytime: this.passvalue, status: 1}).then((value) => {
-          	loading();
-						if(value.code == 200) {
-							for(let ele of value.data) {
-		      			ele.isIn = false;
-		      		}
-							this.orderList = value.data;
-						  this.totalNumber = value.total;//订单总数
-		          this.currentPage = value.page;
-						}else{
-							this.$Message.info(value.msg);
-						}
-					})
-				}
+				let option = {
+          page: 1,
+          pagesize: 10,
+          status: 1
+        }
+        if(this.passvalue) {
+          option.querytime = this.passvalue;
+        }
+        this.initData(option);
 			},
 			orderList() { 
 			  this.checkAllSelect();                                                          	
 			}
 		},
 		methods: {
-			getDataPage() {
-	      this.getData(config.api + apiconfig.orderList,{page: this.currentPage, pagesize: 10, status: 1}).then((value) => {
-					if(value.code == 200) {
-						this.orderList = value.data.map((ele) => {
-							ele.isIn = false;
-							return ele
-						});
-					  this.totalNumber = value.total;//订单总数
-	          this.currentPage = value.page;
-					}else{
-						this.$Message.info(value.msg);
-					}
-				})
+			initData(option) {
+        let loading = this.$Message.loading({
+          content: 'Loading...',
+          duration: 0
+        });
+        this.getData(config.api + apiconfig.orderList, option).then((value) => {
+        	console.log(value)
+          loading();
+          if(value.code == 200) {
+            this.orderList = value.data.map((ele) => {
+              ele.isIn = false;
+              return ele
+            });
+            this.unpushList = this.orderList.map((ele, index) => {
+              return index
+            });
+            this.totalNumber = value.total;//订单总数
+            this.currentPage = value.page;
+          }else{
+            this.$Message.info(value.msg);
+          }
+        })
+      },
+			getDataPage(page) {
+				let option = {
+          page: page,
+          pagesize: 10,
+          status: 1
+        }
+        if(this.passvalue) {
+          option.querytime = this.passvalue;
+        }
+        this.initData(option);
 			},
       loadImg(url) {
         myjs.loadImg(url).then(function(value) {
@@ -368,7 +378,7 @@ import myjs from '@/assets/myjs/myjs.js'
         	})
         }else{
         	this.orderList[this.upLoadOneIndex].pushContent = this.pushContent;
-        	this.unpushList.splice(this.unpushList.indexOf(this.upLoadOneIndex), 1);        
+        	this.unpushList.splice(this.unpushList.indexOf(this.upLoadOneIndex), 1);       
         }
         this.checkAllSelect();
         console.log(this.unpushList);
@@ -380,13 +390,13 @@ import myjs from '@/assets/myjs/myjs.js'
       },
 			saveImg(type, index, item) {
 				if(type == 'left') {
-					saveAs(item.goods[index].leftimg, item.ordersn + '左脚' +  item.goods[index].shoes_size + '.jpeg');
+					saveAs(item.goods[index].leftimg, item.ordersn + '左脚' +  item.goods[index].shoes_size + '.png');
 				}
 				if(type == 'right') {
-					saveAs(item.goods[index].rightimg, item.ordersn + '右脚' +  item.goods[index].shoes_size + '.jpeg');
+					saveAs(item.goods[index].rightimg, item.ordersn + '右脚' +  item.goods[index].shoes_size + '.png');
 				}
 				if(type == 'all') {
-					saveAs(item.goods[index].aboutimg, item.ordersn + '左右脚' +  item.goods[index].shoes_size + '.jpeg');
+					saveAs(item.goods[index].aboutimg, item.ordersn + '左右脚' +  item.goods[index].shoes_size + '.png');
 				}
 			},
 			selectAll() {
@@ -442,16 +452,15 @@ import myjs from '@/assets/myjs/myjs.js'
       },
 		},
 		mounted() {
-      this.getData(config.api + apiconfig.orderList,{page: 1, pagesize: 10, status: 1}).then((value) => {
-      	console.log(value);
-				if(value.code == 200) {
-					this.orderList = value.data;
-				  this.totalNumber = value.total;//订单总数
-          this.currentPage = value.page;
-				}else{
-					this.$Message.info(value.msg);
-				}
-			})
+			let option = {
+          page: 1,
+          pagesize: 10,
+          status: 1
+        }
+        if(this.passvalue) {
+          option.querytime = this.passvalue;
+        }
+        this.initData(option);
 		}
 	}
 

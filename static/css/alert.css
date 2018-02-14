@@ -1,0 +1,71 @@
+/* 底部按钮 */
+.dbBtn{
+    position: relative;
+    text-align: center;
+    line-height: 48px;
+    width: 100%;
+    height: 50px;
+}
+ .dReturn{
+
+    /* position: absolute; */
+top: 10px;
+    left: 0;
+cursor: pointer;
+text-align: left;
+}
+ .dbBtn-in{
+    display: inline-block;
+    
+}
+
+/* 修改弹窗 */
+
+.myalert *{
+box-sizing: content-box;
+}
+.myalert .ivu-modal{
+
+top: 50%;
+left: 0;
+right: 0;
+margin:  0 auto;
+margin-top: -200px; 
+letter-spacing: 1px;
+font-weight: 400px;
+}
+.myalert .ivu-icon-ios-close-empty{
+visibility: hidden;
+}
+.myalert .ivu-modal-content{
+overflow: hidden;
+}
+.myalert .ivu-modal-body{
+width: 100%;
+padding:20px 0;
+display: table;
+}
+.myalert .ivu-modal-body p{
+font-size: 14px;
+width: 100%;
+text-align: center;
+}
+.myalert .ivu-modal-footer{
+padding: 0;
+display: flex;
+}
+.myalert .ivu-modal-footer button{
+flex:1;
+border-radius: 0;
+background: white;
+border: none;
+color:#2d8cf0;
+padding-top: 10px;
+padding-bottom: 11px;
+margin: 0;
+}
+.myalert .ivu-modal-footer button:first-child{
+border-right: 1px solid #e9eaec;
+}
+
+

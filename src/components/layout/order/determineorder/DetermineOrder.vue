@@ -5,7 +5,6 @@
 				<Row class="top-nav">
 		      <Col span="24" class="top-right">
 		        <DatePicker v-model="search" type="date" placeholder="按时间查询" style="width: 200px"></DatePicker>
-		        <Button type="primary" @click="submit">搜索</Button>
 		      </Col>
 		    </Row>
 		    <Row class="table-title">
@@ -31,7 +30,7 @@
 		    </Row>
 		  </div>
 	  </div>
-    <my-determune class="main-content" :passvalue="passvalue"></my-determune>
+    <my-determune class="main-content" :passvalue="formatdate"></my-determune>
 	</div>
 </template>
 <script>
@@ -41,28 +40,20 @@
 		components: {
 			'my-determune': Determune
 		},
-		computed: {
-			pushed () {
-				return this.$store.state.order.isPushed
-			}
-		},
 		data() {
 			return {
-        search: '',//搜索内容
-        passvalue:''
+        search: ''
 			}
 		},
-		watch: {
+		computed: {
+			formatdate() {
+				if(!this.search) return false
+				return new Date(this.search).Format("yyyy-MM-dd")
+			}
 		},
     methods: {
       changePush(status) {
 				this.$store.commit('changeIsPush', status);
-			},
-			submit() {
-				if(this.search == '' || this.passvalue == new Date(this.search).Format("yyyy-MM-dd")) {
-					return
-				}
-				this.passvalue = new Date(this.search).Format("yyyy-MM-dd");
 			}
     }
 	}

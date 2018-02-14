@@ -5,7 +5,6 @@
 				<Row class="top-nav">
 		      <Col span="24" class="top-right">
 		        <DatePicker v-model="search" type="date" placeholder="按时间查询" style="width: 200px"></DatePicker>
-		        <Button type="primary" @click="submit">搜索</Button>
 		      </Col>
 		    </Row>
 		    <Row class="table-title">
@@ -31,7 +30,7 @@
 		    </Row>
 		  </div>
 	  </div>
-    <my-unpaid class="main-content" :passvalue="passvalue"></my-unpaid>
+    <my-unpaid class="main-content" :passvalue="formatdate"></my-unpaid>
 	</div>
 </template>
 <script>
@@ -43,21 +42,15 @@
 		},
 		data() {
 			return {
-        search: '',//搜索内容
-        passvalue:''
+        search: ''
 			}
 		},
-    methods: {
-      changePush(status) {
-				this.$store.commit('changeIsPush', status);
-			},
-			submit() {
-				if(this.search == '' || this.passvalue == new Date(this.search).Format("yyyy-MM-dd")) {
-					return
-				}
-				this.passvalue = new Date(this.search).Format("yyyy-MM-dd");
+		computed: {
+      formatdate() {
+				if(!this.search) return false
+				return new Date(this.search).Format("yyyy-MM-dd")
 			}
-    }
+		}
 	}
 </script>
 <style scoped>
