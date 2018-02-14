@@ -4,8 +4,8 @@
       <div class="userTiltleLe">
         <Row class="Row45">
           <Col span="8">
-          <strong> 用户名：</strong>
-          <Input placeholder="请输入要查询的用户昵称" style="width:55%" v-model="username"></Input>
+            <strong> 用户名：</strong>
+            <Input placeholder="请输入要查询的用户昵称" style="width:55%" v-model="username"></Input>
           </Col>
           <Col span="8" style="text-align: center;">
           <strong> 用户UID：</strong>

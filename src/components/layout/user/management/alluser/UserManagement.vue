@@ -14,7 +14,7 @@
             </Col>
             <Col span="8">
             <strong style="font-size:15px;">状态：</strong>
-  <button class="button" @click="onTab(index)" v-for="(tabs,index) in tabButton" :class="{bactive: showTab == index}" style="margin-right:10px">{{tabs}}<span style="float:right;font-weight:500">/</span></button>
+  <button class="button" @click="onTab(index)" v-for="(tabs,index) in tabButton" :key="index" :class="{bactive: showTab == index}" style="margin-right:10px">{{tabs}}<span style="float:right;font-weight:500">/</span></button>
             </Col>
             <Col span="8" style="text-align: center;"></Col>
             <Col span="8" style="text-align: right;">
@@ -27,7 +27,7 @@
         <div v-if="showTab == 1">
             <Row class="mtp57">
                 <Col class="title1" span="24">
-                <Button @click="onTab1(index)" v-for="(tabs1,index) in tabButton1" :class="{active: showTab1 == index}" style="margin-left:15px;" size="small">
+                <Button @click="onTab1(index)" v-for="(tabs1,index) in tabButton1" :key="index" :class="{active: showTab1 == index}" style="margin-left:15px;" size="small">
                     {{tabs1}}
                 </Button>
                 </Col>
